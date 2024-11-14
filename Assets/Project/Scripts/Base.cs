@@ -1,17 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class Base : MonoBehaviour
 {
-    public ResourcesStorage Storage {get; private set; }
-    public CollectingResourcesRegister CollectingResourcesRegister {get; private set; }
+    public ResourcesStorage Storage { get; private set; }
+    public CollectingResourcesRegister CollectingResourcesRegister { get; private set; }
 
     private void Awake()
     {
-        
+
     }
 
     private void GetComponents()
@@ -28,16 +30,74 @@ public class Base : MonoBehaviour
 
 public class ResourcesSpawner : MonoBehaviour
 {
+    [SerializeField] private ResourcesEventInvoker _resourcesEventInvoker;
+    [SerializeField] private Resource _resourcePrefab;
+    [SerializeField] private Transform[] _spawnPositions;
+    [SerializeField] private int _poolCapacity;
+    [SerializeField] private int _poolMaximumSize;
+    [SerializeField] private float _resourcesSpawnDelay;
 
+    private WaitForSeconds _spawnDelay;
+    private ObjectPool<Resource> _pool;
+
+    private void Awake()
+    {
+        _spawnDelay = new(_resourcesSpawnDelay);
+
+        _pool = new ObjectPool<Resource>(
+              createFunc: () => Instantiate(_resourcePrefab),
+              actionOnGet: (resource) => AccompanyGet(resource),
+              actionOnRelease: (resource) => AccompanyRelease(resource),
+              actionOnDestroy: (resource) => Destroy(resource),
+              collectionCheck: true,
+              defaultCapacity: _poolCapacity,
+              maxSize: _poolMaximumSize);
+    }
+
+    private void OnEnable()
+    {
+        _resourcesEventInvoker.ResourceReturned += _pool.Release;
+    }
+
+    private void OnDisable()
+    {
+        _resourcesEventInvoker.ResourceReturned -= _pool.Release;
+    }
+
+    private void AccompanyGet(Resource resource)
+    {
+        resource.transform.position = GetSpawnPosition();
+        resource.transform.rotation = Quaternion.identity;
+    }
+
+    private void AccompanyRelease(Resource resource)
+    {
+
+    }
+
+    private IEnumerator SpawnResources()
+    {
+        yield return _spawnDelay;
+
+        _pool.Get();
+    }
+
+    private Vector3 GetSpawnPosition()
+    {
+        int minimumSpawnPositionsIndex = 0;
+        int maximumSpawnPositionsIndex = _spawnPositions.Length;
+        int spawnPositionIndex = UnityEngine.Random.Range(minimumSpawnPositionsIndex, maximumSpawnPositionsIndex);
+        return _spawnPositions[spawnPositionIndex].position;
+    }
 }
 
-public class UnitStatusEventInvoker : MonoBehaviour
+public class UnitTaskEventInvoker : MonoBehaviour
 {
-    public event Action<Unit, UnitStatusTypes> UnitStatusChanged;
+    public event Action<Unit, UnitStatusTypes> UnitTaskStatusChanged;
 
     public void Invoke(Unit unit, UnitStatusTypes statusType)
     {
-        UnitStatusChanged?.Invoke(unit, statusType);
+        UnitTaskStatusChanged?.Invoke(unit, statusType);
     }
 }
 
@@ -51,7 +111,7 @@ public class UnitTasker : MonoBehaviour
 {
     [SerializeField] private float _unitSearchingDelay;
 
-    [field: SerializeField] public UnitStatusEventInvoker UnitStatusEventInvoker { get; private set; }
+    [field: SerializeField] public UnitTaskEventInvoker UnitTaskEventInvoker { get; private set; }
 
     private Dictionary<int, Unit> _freeUnits;
     private WaitForSeconds _searchUnitDelay;
@@ -62,13 +122,13 @@ public class UnitTasker : MonoBehaviour
 
     private void OnEnable()
     {
-        UnitStatusEventInvoker.UnitStatusChanged += HandleUnitStatusChanged;
+        UnitTaskEventInvoker.UnitTaskStatusChanged += HandleUnitStatusChanged;
         _resourcesScanner.FoundAvailableResource += RequireCollector;
     }
 
     private void OnDisable()
     {
-        UnitStatusEventInvoker.UnitStatusChanged -= HandleUnitStatusChanged;
+        UnitTaskEventInvoker.UnitTaskStatusChanged -= HandleUnitStatusChanged;
         _resourcesScanner.FoundAvailableResource -= RequireCollector;
     }
 
@@ -135,80 +195,31 @@ public class UnitTasker : MonoBehaviour
 
     private Unit GetFreeUnit()
     {
-        //foreach(Unit unit in _freeUnits)
-        //{
-        //    if (unit.CommandController.Commands.Count == 0)
-        //    {
-        //        return unit;
-        //    }
-        //}
+        int defaultUnitIndex = 0;
+
+        if (_freeUnits.Count > 0)
+        {
+            return _freeUnits[defaultUnitIndex];
+        }
 
         return null;
     }
 }
 
-public class CollectResourceTask : Task
-{
-    private CollectingResourcesRegister _collectingResourcesRegister;
-
-    public void Initialize(Unit unit, Resource resource, ResourcesStorage storage, CollectingResourcesRegister collectingResourcesRegister)
-    {
-        _collectingResourcesRegister = collectingResourcesRegister;
-        _collectingResourcesRegister.RegisterCollectingResource(resource.GetInstanceID(), resource);
-
-        Commands.Enqueue(new MoveToTargetCommand(unit.Mover, resource.transform.position, MoveTypes.MoveToResource));
-        Commands.Enqueue(new TakeResourceCommand(unit.ResourcesHolder, resource));
-        Commands.Enqueue(new MoveToTargetCommand(unit.Mover, storage.transform.position, MoveTypes.MoveToStorage));
-        Commands.Enqueue(new DeliverResourceCommand(unit.ResourcesHolder, storage, resource));
-    }
-}
-
 public class Unit : MonoBehaviour
 {
-    public UnitCommandController CommandController {get; private set; }
-    public UnitResourcesHolder ResourcesHolder {get; private set; }
-    public UnitMover Mover {get; private set; }
-    public CollectingResourcesRegister CollectingResourcesRegister {get; private set; }
+    public UnitCommandController CommandController { get; private set; }
+    public UnitResourcesHolder ResourcesHolder { get; private set; }
+    public UnitMover Mover { get; private set; }
+    public CollectingResourcesRegister CollectingResourcesRegister { get; private set; }
 
-}
-
-public class UnitMover : MonoBehaviour
-{
-    [SerializeField] private float _defaultOffsetDistance;
-    [SerializeField] private float _speed;
-    [SerializeField] private float _offsetToResource;
-    [SerializeField] private float _offsetToBase;
-
-    public bool MoveToTarget(Vector3 targetPosition, MoveTypes moveType)
-    {
-        float offset = _defaultOffsetDistance;
-
-        switch (moveType)
-        {
-            case MoveTypes.MoveToStorage:
-                offset = _offsetToBase;
-                break;
-            case MoveTypes.MoveToResource:
-                offset = _offsetToResource;
-                break;
-        }
-
-        float distanceToTarget = Vector3.Distance(targetPosition, transform.position);
-        Vector3 directionToTarget = (targetPosition - transform.position).normalized;
-        transform.Translate(directionToTarget * _speed * Time.deltaTime, Space.World);
-
-        if (distanceToTarget <= offset)
-        {
-            return true;
-        }
-
-        return false;
-    }
 }
 
 public class UnitResourcesHolder : MonoBehaviour
 {
     [field: SerializeField] public float ActionDistanceOffset { get; private set; }
+
+    [SerializeField] private Vector3 _holdingPosition;
 
     public Resource HoldingResource { get; private set; }
 
@@ -219,6 +230,7 @@ public class UnitResourcesHolder : MonoBehaviour
         if (HoldingResource == null && distanceToTarget < ActionDistanceOffset)
         {
             HoldingResource = resource;
+            PlaceHoldingResource(resource);
             return true;
         }
 
@@ -231,12 +243,18 @@ public class UnitResourcesHolder : MonoBehaviour
 
         if (HoldingResource != null && distanceToTarget < ActionDistanceOffset)
         {
-            storage.AddResource(resource);
+            storage.TakeResource(resource);
             HoldingResource = null;
             return true;
         }
 
         return false;
+    }
+
+    private void PlaceHoldingResource(Resource resource)
+    {
+        resource.transform.position = _holdingPosition;
+        resource.transform.rotation = Quaternion.identity;
     }
 }
 

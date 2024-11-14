@@ -6,7 +6,7 @@ public class UnitCommandController : MonoBehaviour
     private UnitTasker _unitTasker;
 
     private Unit _selfUnit;
-    private UnitStatusEventInvoker _unitStatusEventInvoker;
+    private UnitTaskEventInvoker _unitTaskEventInvoker;
 
     public Queue<ICommand> Commands { get; private set; }
     public ICommand CurrentCommand { get; private set; }
@@ -21,7 +21,7 @@ public class UnitCommandController : MonoBehaviour
     public void Initialize(UnitTasker unitTasker)
     {
         _unitTasker = unitTasker;
-        _unitStatusEventInvoker = _unitTasker.UnitStatusEventInvoker;
+        _unitTaskEventInvoker = _unitTasker.UnitTaskEventInvoker;
         HandleTask();
     }
 
@@ -37,7 +37,7 @@ public class UnitCommandController : MonoBehaviour
             AddCommand(command);
         }
 
-        _unitStatusEventInvoker.Invoke(_selfUnit, UnitStatusTypes.Busy);
+        _unitTaskEventInvoker.Invoke(_selfUnit, UnitStatusTypes.Busy);
         HandleTask();
     }
 
@@ -61,6 +61,6 @@ public class UnitCommandController : MonoBehaviour
             }
         }
 
-        _unitStatusEventInvoker.Invoke(_selfUnit, UnitStatusTypes.Free);
+        _unitTaskEventInvoker.Invoke(_selfUnit, UnitStatusTypes.Free);
     }
 }
