@@ -1006,10 +1006,51 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8313876622695508581, guid: 6cf7f5c6a23e79846961df35bca1dd30,
         type: 3}
+      propertyPath: _storageZone
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8313876622695508581, guid: 6cf7f5c6a23e79846961df35bca1dd30,
+        type: 3}
       propertyPath: _resourceEventInvoker
       value: 
       objectReference: {fileID: 1980504880}
-    m_RemovedComponents: []
+    - target: {fileID: 8470212585949274035, guid: 6cf7f5c6a23e79846961df35bca1dd30,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 3.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470212585949274035, guid: 6cf7f5c6a23e79846961df35bca1dd30,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 3.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470212585949274035, guid: 6cf7f5c6a23e79846961df35bca1dd30,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 3.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470212585949274035, guid: 6cf7f5c6a23e79846961df35bca1dd30,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470212585949274035, guid: 6cf7f5c6a23e79846961df35bca1dd30,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 2.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470212585949274035, guid: 6cf7f5c6a23e79846961df35bca1dd30,
+        type: 3}
+      propertyPath: m_Center.z
+      value: 0.76
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470212585949274035, guid: 6cf7f5c6a23e79846961df35bca1dd30,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7165716015229398858, guid: 6cf7f5c6a23e79846961df35bca1dd30, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
