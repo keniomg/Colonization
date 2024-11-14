@@ -24,6 +24,7 @@ public class UnitMover : MonoBehaviour
         float distanceToTarget = Vector3.Distance(targetPosition, transform.position);
         Vector3 directionToTarget = (targetPosition - transform.position).normalized;
         transform.Translate(directionToTarget * _speed * Time.deltaTime, Space.World);
+        transform.LookAt(targetPosition);
 
         if (distanceToTarget <= offset)
         {

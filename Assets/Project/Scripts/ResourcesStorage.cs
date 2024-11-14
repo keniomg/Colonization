@@ -5,7 +5,7 @@ public class ResourcesStorage : MonoBehaviour
 {
     [SerializeField] private ResourcesEventInvoker _resourceEventInvoker;
     [SerializeField] private BoxCollider _storageZone;
-    [SerializeField] private Vector3 _storagePlace;
+    [SerializeField] private Transform _storagePlace;
 
     private List<Resource> _resources;
 
@@ -41,7 +41,7 @@ public class ResourcesStorage : MonoBehaviour
 
     private void PlaceResource(Resource resource)
     {
-        resource.transform.position = _storagePlace;
+        resource.transform.position = _storagePlace.position;
         resource.transform.rotation = Quaternion.identity;
     }
 }

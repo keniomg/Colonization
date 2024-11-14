@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class UnitCommandController : MonoBehaviour
 {
-    private UnitTasker _unitTasker;
-
+    private Base _owner;
     private Unit _selfUnit;
     private UnitTaskEventInvoker _unitTaskEventInvoker;
 
@@ -17,11 +16,10 @@ public class UnitCommandController : MonoBehaviour
         Commands = new Queue<ICommand>();
     }
 
-
-    public void Initialize(UnitTasker unitTasker)
+    public void Initialize(Base ownBase)
     {
-        _unitTasker = unitTasker;
-        _unitTaskEventInvoker = _unitTasker.UnitTaskEventInvoker;
+        _owner = ownBase;
+        _unitTaskEventInvoker = _owner.UnitTaskEventInvoker;
         HandleTask();
     }
 
@@ -32,12 +30,14 @@ public class UnitCommandController : MonoBehaviour
 
     public void AddTask(Task task)
     {
+        task.InitializeExecutor(_selfUnit);
+
         foreach (ICommand command in task.Commands)
         {
             AddCommand(command);
         }
 
-        _unitTaskEventInvoker.Invoke(_selfUnit, UnitStatusTypes.Busy);
+        _unitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Busy);
         HandleTask();
     }
 
@@ -61,6 +61,6 @@ public class UnitCommandController : MonoBehaviour
             }
         }
 
-        _unitTaskEventInvoker.Invoke(_selfUnit, UnitStatusTypes.Free);
+        _unitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Free);
     }
 }
