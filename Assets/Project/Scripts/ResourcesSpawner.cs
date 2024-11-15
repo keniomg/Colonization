@@ -57,9 +57,12 @@ public class ResourcesSpawner : MonoBehaviour
 
     private IEnumerator SpawnResources()
     {
-        yield return _spawnDelay;
+        while (true)
+        {
+            yield return _spawnDelay;
 
-        _pool.Get();
+            _pool.Get();
+        }
     }
 
     private Vector3 GetSpawnPosition()

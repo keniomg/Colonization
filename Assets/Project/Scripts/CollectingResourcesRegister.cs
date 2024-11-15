@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CollectingResourcesRegister : MonoBehaviour
 {
-    public Dictionary<int, Resource> CollectingResources { get; private set; }
+    public Dictionary<int, Resource> CollectingResources { get; private set; } = new Dictionary<int, Resource>();
 
     public void RegisterCollectingResource(int id, Resource resource)
     {

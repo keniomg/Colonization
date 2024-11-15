@@ -15,6 +15,10 @@ public class UnitSpawner : MonoBehaviour
 
     private void Awake()
     {
+    }
+
+    public void Initialize(Base owner)
+    {
         _pool = new ObjectPool<Unit>(
                 createFunc: () => Instantiate(_prefab),
                 actionOnGet: (unit) => AccompanyGet(unit),
@@ -23,10 +27,7 @@ public class UnitSpawner : MonoBehaviour
                 collectionCheck: true,
                 defaultCapacity: _poolCapacity,
                 maxSize: _poolMaximumSize);
-    }
-
-    public void Initialize(Base owner)
-    {
+        
         _owner = owner;
         SpawnUnitsCount(_startUnitsCount);
     }

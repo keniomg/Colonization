@@ -6,17 +6,17 @@ public class Map : MonoBehaviour
     public event Action<int, Resource> ResourceAppeared;
     public event Action<int, Resource> ResourceDisappeared;
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.TryGetComponent(out Resource resource))
+        if (other.gameObject.TryGetComponent(out Resource resource))
         {
             ResourceAppeared?.Invoke(resource.gameObject.GetInstanceID(), resource);
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        if (collision.gameObject.TryGetComponent(out Resource resource))
+        if (other.gameObject.TryGetComponent(out Resource resource))
         {
             ResourceDisappeared?.Invoke(resource.gameObject.GetInstanceID(), resource);
         }

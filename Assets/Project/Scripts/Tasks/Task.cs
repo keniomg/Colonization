@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
-public class Task : MonoBehaviour
+public class Task
 {
     protected Unit Unit;
 
-    public Queue<ICommand> Commands { get; protected set; }
+    public Queue<ICommand> Commands { get; protected set; } = new Queue<ICommand>();
 
-    public void InitializeExecutor(Unit unit)
+    public virtual void InitializeExecutor(Unit unit)
     {
         Unit = unit;
     }

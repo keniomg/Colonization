@@ -6,7 +6,7 @@ public class ResourcesScanner : MonoBehaviour
 {
     [SerializeField] private Map _map;
 
-    public Dictionary<int, Resource> ResourcesOnMap { get; private set; }
+    public Dictionary<int, Resource> ResourcesOnMap { get; private set; } = new Dictionary<int, Resource>();
 
     public event Action<int, Resource> FoundAvailableResource;
 

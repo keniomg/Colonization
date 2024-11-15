@@ -428,7 +428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a06c305523b1e4ebb3770f20fad152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 0}
+  _prefab: {fileID: 4741618601389713476, guid: a583491f65c28c944837047083dec8b9, type: 3}
   _poolCapacity: 5
   _poolMaximumSize: 8
   _startUnitsCount: 3

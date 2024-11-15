@@ -4,7 +4,8 @@ public class UnitResourcesHolder : MonoBehaviour
 {
     [SerializeField] private float _actionDistanceOffset;
     [SerializeField] private Transform _holdingPoint;
-    [SerializeField] private Resource _holdingResource;
+
+    private Resource _holdingResource;
 
     public bool TakeResource(Resource resource)
     {

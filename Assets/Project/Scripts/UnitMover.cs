@@ -2,10 +2,16 @@
 
 public class UnitMover : MonoBehaviour
 {
-    [SerializeField] private float _defaultOffsetDistance;
     [SerializeField] private float _speed;
     [SerializeField] private float _offsetToResource;
     [SerializeField] private float _offsetToBase;
+    
+    private float _defaultOffsetDistance;
+
+    private void Awake()
+    {
+        _defaultOffsetDistance = transform.localScale.y;
+    }
 
     public bool MoveToTarget(Vector3 targetPosition, MoveTypes moveType)
     {

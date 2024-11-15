@@ -7,9 +7,11 @@ public class UnitTasker : MonoBehaviour
 {
     [SerializeField] private float _unitSearchingDelay;
 
-    private Dictionary<int, Unit> _freeUnits;
+    private Dictionary<int, Unit> _freeUnits = new Dictionary<int, Unit>();
+    private List<int> _unitsId = new List<int>();
+    private Queue<Task> _tasks = new Queue<Task>();
     private WaitForSeconds _searchUnitDelay;
-    private Queue<Task> _tasks;
+    private Coroutine _findTasksExecutors;
 
     private CollectingResourcesRegister _collectingResourcesRegister;
     private UnitTaskEventInvoker _unitTaskEventInvoker;
@@ -17,6 +19,12 @@ public class UnitTasker : MonoBehaviour
     private ResourcesStorage _storage;
 
     private event Action _appearedNewTask;
+
+    private void Awake()
+    {
+        _searchUnitDelay = new(_unitSearchingDelay);
+        _findTasksExecutors = null;
+    }
 
     private void OnEnable()
     {
@@ -30,13 +38,14 @@ public class UnitTasker : MonoBehaviour
         _appearedNewTask -= DelegateTask;
     }
 
-    public void Initialize(ResourcesScanner resourcesScanner, CollectingResourcesRegister collectingResourcesRegister, UnitTaskEventInvoker unitTaskEventInvoker)
+    public void Initialize(Base owner)
     {
-        _resourcesScanner = resourcesScanner;
+        _resourcesScanner = owner.ResourcesScanner;
         _resourcesScanner.FoundAvailableResource += HandleAvailableResource;
-        _collectingResourcesRegister = collectingResourcesRegister;
-        _unitTaskEventInvoker = unitTaskEventInvoker;
+        _collectingResourcesRegister = owner.CollectingResourcesRegister;
+        _unitTaskEventInvoker = owner.UnitTaskEventInvoker;
         _unitTaskEventInvoker.UnitTaskStatusChanged += HandleUnitStatusChanged;
+        _storage = owner.Storage;
     }
 
     private void HandleUnitStatusChanged(Unit unit, UnitTaskStatusTypes statusType)
@@ -57,6 +66,7 @@ public class UnitTasker : MonoBehaviour
         if (_freeUnits.ContainsKey(id))
         {
             _freeUnits.Remove(id);
+            _unitsId.Remove(id);
         }
     }
 
@@ -65,6 +75,7 @@ public class UnitTasker : MonoBehaviour
         if (_freeUnits.ContainsKey(id) == false)
         {
             _freeUnits.Add(id, unit);
+            _unitsId.Add(id);
         }
     }
 
@@ -79,7 +90,7 @@ public class UnitTasker : MonoBehaviour
 
     private void DelegateTask()
     {
-        StartCoroutine(FindTasksExecutors());
+        _findTasksExecutors = StartCoroutine(FindTasksExecutors());
     }
 
     private IEnumerator FindTasksExecutors()
@@ -93,15 +104,18 @@ public class UnitTasker : MonoBehaviour
 
             GetFreeUnit().CommandController.AddTask(_tasks.Dequeue());
         }
+
+        _findTasksExecutors = null;
     }
 
     private Unit GetFreeUnit()
     {
-        int defaultUnitIndex = 0;
-
         if (_freeUnits.Count > 0)
         {
-            return _freeUnits[defaultUnitIndex];
+            foreach (Unit unit in _freeUnits.Values)
+            {
+                return unit;
+            }
         }
 
         return null;

@@ -11,7 +11,7 @@ public class ResourcesStorage : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Resource resource))
+        if (other == _storageZone && other.TryGetComponent(out Resource resource))
         {
             _resources.Add(resource);
         }        
@@ -19,7 +19,7 @@ public class ResourcesStorage : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent(out Resource resource))
+        if (other == _storageZone && other.TryGetComponent(out Resource resource))
         {
             _resources.Remove(resource);
         }
@@ -28,6 +28,7 @@ public class ResourcesStorage : MonoBehaviour
     public void TakeResource(Resource resource)
     {
         PlaceResource(resource);
+        _resourceEventInvoker.InvokeResourceChanged(_resources.Count);
     }
 
     public void RemoveResource(Resource resource)
@@ -35,7 +36,8 @@ public class ResourcesStorage : MonoBehaviour
         if (_resources.Count > 0)
         {
             _resources.Remove(resource);
-            _resourceEventInvoker.Invoke(resource);
+            _resourceEventInvoker.InvokeResourceReturn(resource);
+            _resourceEventInvoker.InvokeResourceChanged(_resources.Count);
         }
     }
 

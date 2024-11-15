@@ -4,8 +4,6 @@
 
 public class Building : MonoBehaviour
 {
-    private SphereCollider _sphereCollider;
-
     public float OccupiedZoneRadius { get; private set; }
 
     protected virtual void Awake()
@@ -15,9 +13,9 @@ public class Building : MonoBehaviour
 
     private void GetOccupiedZoneRadius()
     {
-        if (_sphereCollider.TryGetComponent(out SphereCollider capsuleCollider))
+        if (TryGetComponent(out SphereCollider sphereCollider))
         {
-            OccupiedZoneRadius = _sphereCollider.radius;
+            OccupiedZoneRadius = sphereCollider.radius;
         }
     }
 }
