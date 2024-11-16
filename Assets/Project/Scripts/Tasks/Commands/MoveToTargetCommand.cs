@@ -3,24 +3,29 @@
 public class MoveToTargetCommand : ICommand
 {
     private UnitMover _unitMover;
-    private Vector3 _targetPosition;
+    private Transform _targetTransform;
     private bool _isComplete;
     private MoveTypes _moveType;
+    private UnitAnimationEventInvoker _unitAnimationEventInvoker;
 
     public bool IsComplete => _isComplete;
 
-    public MoveToTargetCommand(UnitMover unitMover, Vector3 targetPosition, MoveTypes moveType)
+    public MoveToTargetCommand(Unit unit, Transform targetTransform, MoveTypes moveType)
     {
-        _unitMover = unitMover;
-        _targetPosition = targetPosition;
+        _unitMover = unit.Mover;
+        _unitAnimationEventInvoker = unit.AnimationEventInvoker;
+        _targetTransform = targetTransform;
         _moveType = moveType;
     }
 
     public void Execute()
     {
-        if (_unitMover.MoveToTarget(_targetPosition, _moveType))
+        _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, true);
+
+        if (_unitMover.MoveToTarget(_targetTransform, _moveType))
         {
             _isComplete = true;
+            _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, false);
         }
     }
 }

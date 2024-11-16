@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3603859195498069913}
-  - component: {fileID: 7165716015229398858}
   m_Layer: 0
   m_Name: Storage
   m_TagString: Untagged
@@ -38,27 +37,6 @@ Transform:
   - {fileID: 7264603559045067131}
   m_Father: {fileID: 4303286296443105590}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7165716015229398858
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 921525462682666939}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.94, y: 3.66, z: 3.13}
-  m_Center: {x: 0, y: 2.43, z: 1.36}
 --- !u!1 &1520560167891893772
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,7 +367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourceEventInvoker: {fileID: 0}
-  _storageZone: {fileID: 7165716015229398858}
+  _storageZone: {fileID: 0}
   _storagePlace: {fileID: 7264603559045067131}
 --- !u!114 &492710096843723820
 MonoBehaviour:

@@ -2,14 +2,16 @@
 {
     private UnitResourcesHolder _resourcesHolder;
     private Resource _resource;
+    private UnitAnimationEventInvoker _unitAnimationEventInvoker;
 
     private bool _isComplete;
 
     public bool IsComplete => _isComplete;
 
-    public TakeResourceCommand(UnitResourcesHolder resourcesHolder, Resource resource)
+    public TakeResourceCommand(Unit unit, Resource resource)
     {
-        _resourcesHolder = resourcesHolder;
+        _resourcesHolder = unit.ResourcesHolder;
+        _unitAnimationEventInvoker = unit.AnimationEventInvoker;
         _resource = resource;
     }
 
@@ -18,6 +20,7 @@
         if (_resourcesHolder.TakeResource(_resource))
         {
             _isComplete = true;
+            _unitAnimationEventInvoker.Invoke(AnimationsTypes.Hold, true);
         }
     }
 }

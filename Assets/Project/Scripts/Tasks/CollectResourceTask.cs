@@ -8,16 +8,16 @@
     {
         base.InitializeExecutor(unit);
 
-        Commands.Enqueue(new MoveToTargetCommand(Unit.Mover, _resource.transform.position, MoveTypes.MoveToResource));
-        Commands.Enqueue(new TakeResourceCommand(Unit.ResourcesHolder, _resource));
-        Commands.Enqueue(new MoveToTargetCommand(Unit.Mover, _storage.transform.position, MoveTypes.MoveToStorage));
-        Commands.Enqueue(new DeliverResourceCommand(Unit.ResourcesHolder, _storage, _resource));
+        Commands.Enqueue(new MoveToTargetCommand(Unit, _resource.transform, MoveTypes.MoveToResource));
+        Commands.Enqueue(new TakeResourceCommand(Unit, _resource));
+        Commands.Enqueue(new MoveToTargetCommand(Unit, _storage.transform, MoveTypes.MoveToStorage));
+        Commands.Enqueue(new DeliverResourceCommand(Unit, _storage, _resource));
     }
 
     public CollectResourceTask(Resource resource, ResourcesStorage storage, CollectingResourcesRegister collectingResourcesRegister)
     {
         _collectingResourcesRegister = collectingResourcesRegister;
-        _collectingResourcesRegister.RegisterCollectingResource(resource.GetInstanceID(), resource);
+        _collectingResourcesRegister.RegisterCollectingResource(resource.gameObject.GetInstanceID(), resource);
         _resource = resource;
         _storage = storage;
     }
