@@ -71,6 +71,11 @@ public class UnitSpawner : MonoBehaviour
         unit.gameObject.SetActive(false);
     }
 
+    private void OnFlagStatusChanged(bool isSet)
+    {
+
+    }
+
     private void SpawnColonizator()
     {
         _colonizatorPool.Get();

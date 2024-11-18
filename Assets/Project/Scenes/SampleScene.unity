@@ -1699,6 +1699,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1518334063496961038, guid: c8edf840c92a040428eace709620c4f4,
         type: 3}
+    - target: {fileID: 7845469856250377152, guid: 6cf7f5c6a23e79846961df35bca1dd30,
+        type: 3}
+      propertyPath: _collectorPrefab
+      value: 
+      objectReference: {fileID: 1518334063496961038, guid: c8edf840c92a040428eace709620c4f4,
+        type: 3}
+    - target: {fileID: 7845469856250377152, guid: 6cf7f5c6a23e79846961df35bca1dd30,
+        type: 3}
+      propertyPath: _coloniztorPrefab
+      value: 
+      objectReference: {fileID: 1518334063496961038, guid: c8edf840c92a040428eace709620c4f4,
+        type: 3}
     - target: {fileID: 8313876622695508581, guid: 6cf7f5c6a23e79846961df35bca1dd30,
         type: 3}
       propertyPath: _storageZone
