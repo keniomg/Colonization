@@ -3,20 +3,24 @@ using UnityEngine.Pool;
 
 public class UnitSpawner : MonoBehaviour
 {
-    [SerializeField] private Unit _prefab;
+    [SerializeField] private Unit _collectorPrefab;
+    [SerializeField] private Unit _coloniztorPrefab;
     [SerializeField] private int _poolCapacity;
     [SerializeField] private int _poolMaximumSize;
     [SerializeField] private int _startUnitsCount;
     [SerializeField] private float _spawnOffsetRadius;
 
+    private ResourcesStorage _resourcesStorage;
     private Base _owner;
+    private FlagSetter _flagSetter;
 
-    private ObjectPool<Unit> _pool;
+    private ObjectPool<Unit> _collectorPool;
+    private ObjectPool<Unit> _colonizatorPool;
 
-    public void Initialize(Base owner)
+    public void Initialize(Base owner, FlagSetter flagSetter)
     {
-        _pool = new ObjectPool<Unit>(
-                createFunc: () => Instantiate(_prefab),
+        _collectorPool = new ObjectPool<Unit>(
+                createFunc: () => Instantiate(_collectorPrefab),
                 actionOnGet: (unit) => AccompanyGet(unit),
                 actionOnRelease: (unit) => AccompanyRelease(unit),
                 actionOnDestroy: (unit) => Destroy(unit),
@@ -24,8 +28,20 @@ public class UnitSpawner : MonoBehaviour
                 defaultCapacity: _poolCapacity,
                 maxSize: _poolMaximumSize);
         
+        _colonizatorPool = new ObjectPool<Unit>(
+                createFunc: () => Instantiate(_coloniztorPrefab),
+                actionOnGet: (unit) => AccompanyGet(unit),
+                actionOnRelease: (unit) => AccompanyRelease(unit),
+                actionOnDestroy: (unit) => Destroy(unit),
+                collectionCheck: true,
+                defaultCapacity: _poolCapacity,
+                maxSize: _poolMaximumSize);
+
         _owner = owner;
-        SpawnUnitsCount(_startUnitsCount);
+        _resourcesStorage = _owner.Storage;
+        _flagSetter = _owner.FlagSetter;
+        //_flagSetter.FlagStatusChanged
+        SpawnCollectorsCount(_startUnitsCount);
     }
 
     private Vector3 GetSpawnPosition()
@@ -55,16 +71,21 @@ public class UnitSpawner : MonoBehaviour
         unit.gameObject.SetActive(false);
     }
 
-    private void SpawnUnit()
+    private void SpawnColonizator()
     {
-        _pool.Get();
+        _colonizatorPool.Get();
     }
 
-    private void SpawnUnitsCount(int unitsCount)
+    private void SpawnCollector()
+    {
+        _collectorPool.Get();
+    }
+
+    private void SpawnCollectorsCount(int unitsCount)
     {
         for (int i = 0; i < _startUnitsCount; i++)
         {
-            SpawnUnit();
+            SpawnCollector();
         }
     }
 }

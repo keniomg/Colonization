@@ -2,6 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider), typeof(ResourcesScanner), typeof(ResourcesStorage))]
 [RequireComponent(typeof(CollectingResourcesRegister), typeof(UnitTasker), typeof(UnitSpawner))]
+[RequireComponent(typeof(FlagSetter))]
 
 public class Base : Building
 {
@@ -12,6 +13,7 @@ public class Base : Building
     public ResourcesStorage Storage { get; private set; }
     public CollectingResourcesRegister CollectingResourcesRegister { get; private set; }
     public UnitTaskEventInvoker UnitTaskEventInvoker { get; private set; }
+    public FlagSetter FlagSetter { get; private set; }
 
     protected override void Awake()
     {
@@ -25,16 +27,17 @@ public class Base : Building
     {
         UnitTaskEventInvoker = ScriptableObject.CreateInstance<UnitTaskEventInvoker>();
 
-        CollectingResourcesRegister = TryGetComponent(out CollectingResourcesRegister collectingResourcesRegister) ? collectingResourcesRegister : null;
-        Storage = TryGetComponent(out ResourcesStorage storage) ? storage : null;
-        _unitTasker = TryGetComponent(out UnitTasker unitTasker) ? unitTasker : null;
-        ResourcesScanner = TryGetComponent(out ResourcesScanner resourcesScanner) ? resourcesScanner : null;
-        _unitSpawner = TryGetComponent(out UnitSpawner unitSpawner) ? unitSpawner : null;
+        FlagSetter = GetComponent<FlagSetter>();
+        CollectingResourcesRegister = GetComponent<CollectingResourcesRegister>();
+        Storage = GetComponent<ResourcesStorage>();
+        _unitTasker = GetComponent<UnitTasker>();
+        ResourcesScanner = GetComponent<ResourcesScanner>();
+        _unitSpawner = GetComponent<UnitSpawner>();
     }
 
     private void InitializeComponents()
     {
         _unitTasker.Initialize(this);
-        _unitSpawner.Initialize(this);
+        _unitSpawner.Initialize(this, FlagSetter);
     }
 }

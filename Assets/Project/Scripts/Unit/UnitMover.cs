@@ -30,9 +30,8 @@ public class UnitMover : MonoBehaviour
 
         _navMeshAgent.SetDestination(targetTransform.position);
         _navMeshAgent.stoppingDistance = offset - _defaultOffsetDistance;
-        float distanceToTarget = Vector3.Distance(targetTransform.position, transform.position);
 
-        if (distanceToTarget <= offset)
+        if (transform.position.IsEnoughDistance(targetTransform.position, offset))
         {
             _navMeshAgent.ResetPath();
             return true;
