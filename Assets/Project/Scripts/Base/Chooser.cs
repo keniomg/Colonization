@@ -12,23 +12,34 @@ public class Chooser : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-            if (Physics.Raycast(ray, out RaycastHit hit) &&
-                hit.collider.TryGetComponent(out Choosable choosable))
+            if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                Choose(choosable);
+                if (hit.collider.TryGetComponent(out Choosable choosable))
+                {
+                    Choose(choosable);
+                }
+                else
+                {
+                    Unchoose();
+                }
             }
         }
     }
 
     private void Choose(Choosable choosable)
     {
+        Unchoose();
+
+        _chosen = choosable;
+        _chosen.ChangeChosenStatus(true);
+    }
+
+    private void Unchoose()
+    {
         if (_chosen != null)
         {
             _chosen.ChangeChosenStatus(false);
             _chosen = null;
         }
-
-        _chosen = choosable;
-        _chosen.ChangeChosenStatus(true);
     }
 }
