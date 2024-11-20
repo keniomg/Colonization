@@ -10,7 +10,9 @@ public class FlagSetter : MonoBehaviour
     private float _requiredRadius;
     private Flag _flag;
 
-    public event Action<bool> FlagStatusChanged;
+    public event Action FlagStatusChanged;
+
+    public Flag Flag { get; private set; }
 
     private void Awake()
     {
@@ -57,12 +59,14 @@ public class FlagSetter : MonoBehaviour
     {
         _flag.gameObject.SetActive(true);
         _flag.transform.position = flagPosition;
-        FlagStatusChanged?.Invoke(true);
+        FlagStatusChanged?.Invoke();
+        Flag = _flag;
     }
 
     private void UnsetFlag()
     {
         _flag.gameObject.SetActive(false);
-        FlagStatusChanged?.Invoke(false);
+        FlagStatusChanged?.Invoke();
+        Flag = null;
     }
 }

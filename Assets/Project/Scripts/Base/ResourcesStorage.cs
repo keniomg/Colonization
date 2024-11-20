@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ResourcesStorage : MonoBehaviour
@@ -8,6 +9,10 @@ public class ResourcesStorage : MonoBehaviour
     [SerializeField] private Transform _storagePlace;
 
     private Dictionary<int, Resource> _resources = new Dictionary<int, Resource>();
+
+    public event Action ValueChanged;
+
+    public int Count => _resources.Count;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -41,7 +46,7 @@ public class ResourcesStorage : MonoBehaviour
         if (_resources.ContainsKey(id) == false)
         {
             _resources.Add(id, resource);
-            _resourceEventInvoker.InvokeResourceChanged(_resources.Count);
+            ValueChanged?.Invoke();
         }
     }
 
@@ -50,7 +55,7 @@ public class ResourcesStorage : MonoBehaviour
         if (_resources.ContainsKey(id))
         {
             _resources.Remove(id);
-            _resourceEventInvoker.InvokeResourceChanged(_resources.Count);
+            ValueChanged.Invoke();
             _resourceEventInvoker.InvokeResourceReturn(resource);
         }
     }
@@ -63,9 +68,9 @@ public class ResourcesStorage : MonoBehaviour
         float minimumPositionZ = _storagePlace.position.z - _storagePlace.localScale.z / numbersOfSide;
         float maximumPositionZ = _storagePlace.position.z + _storagePlace.localScale.z / numbersOfSide;
 
-        float positionX = Random.Range(minimumPositionX, maximumPositionX);
+        float positionX = UnityEngine.Random.Range(minimumPositionX, maximumPositionX);
         float positionY = _storagePlace.position.y;
-        float positionZ = Random.Range(minimumPositionZ, maximumPositionZ);
+        float positionZ = UnityEngine.Random.Range(minimumPositionZ, maximumPositionZ);
         Vector3 placePosition = new(positionX, positionY, positionZ);
 
         return placePosition;

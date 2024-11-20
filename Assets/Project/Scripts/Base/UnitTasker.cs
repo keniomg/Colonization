@@ -3,52 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitTasker : MonoBehaviour
+public class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
 {
     [SerializeField] private float _unitSearchingDelay;
 
-    private Dictionary<int, Unit> _freeUnits = new Dictionary<int, Unit>();
+    private Dictionary<int, UnitType> _freeUnits = new Dictionary<int, UnitType>();
     private List<int> _unitsId = new List<int>();
-    private Queue<Task> _tasks = new Queue<Task>();
     private WaitForSeconds _searchUnitDelay;
     private Coroutine _appointExecutors;
-
-    private CollectingResourcesRegister _collectingResourcesRegister;
     private UnitTaskEventInvoker _unitTaskEventInvoker;
-    private ResourcesScanner _resourcesScanner;
-    private ResourcesStorage _storage;
 
-    private event Action _appearedNewTask;
-
+    protected Queue<Task> Tasks = new Queue<Task>();
+    
     private void Awake()
     {
         _searchUnitDelay = new(_unitSearchingDelay);
         _appointExecutors = null;
     }
 
-    private void OnEnable()
-    {
-        _appearedNewTask += DelegateTask;
-    }
-
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         _unitTaskEventInvoker.UnitTaskStatusChanged -= HandleUnitStatusChanged;
-        _resourcesScanner.FoundAvailableResource -= HandleAvailableResource;
-        _appearedNewTask -= DelegateTask;
     }
 
-    public void Initialize(Base owner)
+    public virtual void Initialize(Base owner)
     {
-        _resourcesScanner = owner.ResourcesScanner;
-        _resourcesScanner.FoundAvailableResource += HandleAvailableResource;
-        _collectingResourcesRegister = owner.CollectingResourcesRegister;
         _unitTaskEventInvoker = owner.UnitTaskEventInvoker;
         _unitTaskEventInvoker.UnitTaskStatusChanged += HandleUnitStatusChanged;
-        _storage = owner.Storage;
     }
 
-    private void HandleUnitStatusChanged(Unit unit, UnitTaskStatusTypes statusType)
+    protected void DelegateTask()
+    {
+        _appointExecutors = StartCoroutine(AppointExecutors());
+    }
+
+    private void HandleUnitStatusChanged(UnitType unit, UnitTaskStatusTypes statusType)
     {
         switch (statusType)
         {
@@ -70,7 +59,7 @@ public class UnitTasker : MonoBehaviour
         }
     }
 
-    private void AddFreeUnit(int id, Unit unit)
+    private void AddFreeUnit(int id, UnitType unit)
     {
         if (_freeUnits.ContainsKey(id) == false)
         {
@@ -79,36 +68,22 @@ public class UnitTasker : MonoBehaviour
         }
     }
 
-    private void HandleAvailableResource(int id, Resource resource)
-    {
-        if (_collectingResourcesRegister.CollectingResources.ContainsKey(id) == false)
-        {
-            _tasks.Enqueue(new CollectResourceTask(resource, _storage, _collectingResourcesRegister));
-            _appearedNewTask?.Invoke();
-        }
-    }
-
-    private void DelegateTask()
-    {
-        _appointExecutors = StartCoroutine(AppointExecutors());
-    }
-
     private IEnumerator AppointExecutors()
     {
-        while (_tasks.Count > 0)
+        while (Tasks.Count > 0)
         {
             while (_freeUnits.Count == 0)
             {
                 yield return _searchUnitDelay;
             }
 
-            GetFreeUnit().CommandController.AddTask(_tasks.Dequeue());
+            GetFreeUnit().CommandController.AddTask(Tasks.Dequeue());
         }
 
         _appointExecutors = null;
     }
 
-    private Unit GetFreeUnit()
+    private UnitType GetFreeUnit()
     {
         int defailtUnitIndex = 0;
 

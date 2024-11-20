@@ -17,8 +17,11 @@ public class ResourcesCounterView : MonoBehaviour
         _resourcesEventInvoker.ResourceChanged -= OnValueChanged;
     }
 
-    private void OnValueChanged(int resources)
+    private void OnValueChanged(int id, int resources)
     {
-        _resources.text = $"{_defaultText} {resources}";
+        if (gameObject.GetInstanceID() == id)
+        {
+            _resources.text = $"{_defaultText} {resources}";
+        }
     }
 }
