@@ -19,7 +19,7 @@ public class ResourcesStorage : MonoBehaviour
         if (other.GetType() == typeof(BoxCollider) && other.TryGetComponent(out Resource resource))
         {
             RegisterResource(resource.gameObject.GetInstanceID(), resource);
-        }     
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -38,6 +38,14 @@ public class ResourcesStorage : MonoBehaviour
         if (resource.TryGetComponent(out BoxCollider collider))
         {
             collider.enabled = true;
+        }
+    }
+
+    public void PayResource(int resourceCount)
+    {
+        for (int i = 0; i < resourceCount; i++)
+        {
+
         }
     }
 

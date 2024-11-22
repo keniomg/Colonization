@@ -10,9 +10,12 @@
 
     public TakeResourceCommand(Unit unit, Resource resource)
     {
-        _resourcesHolder = unit.ResourcesHolder;
-        _unitAnimationEventInvoker = unit.AnimationEventInvoker;
-        _resource = resource;
+        if (unit.TryGetComponent(out UnitResourcesHolder unitResourcesHolder))
+        {
+            _resourcesHolder = unitResourcesHolder;
+            _unitAnimationEventInvoker = unit.AnimationEventInvoker;
+            _resource = resource;
+        }
     }
 
     public void Execute()

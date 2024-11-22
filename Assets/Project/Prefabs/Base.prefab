@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3603859195498069913}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Storage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,7 +49,7 @@ GameObject:
   - component: {fileID: 5247168158650402091}
   - component: {fileID: 8646646368060712714}
   - component: {fileID: 1713397882788399557}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 5592186253381483033}
   - component: {fileID: 8519161511487117189}
   - component: {fileID: 769339855608134971}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Left Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -256,7 +256,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7264603559045067131}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Resource Placing Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,11 +291,15 @@ GameObject:
   - component: {fileID: 4327123599771260106}
   - component: {fileID: 8313876622695508581}
   - component: {fileID: 492710096843723820}
-  - component: {fileID: 1017396630584456444}
-  - component: {fileID: 7845469856250377152}
   - component: {fileID: 2275659104700815740}
   - component: {fileID: 8984826528171323642}
-  m_Layer: 0
+  - component: {fileID: 7912038169431452896}
+  - component: {fileID: 3417912230743190544}
+  - component: {fileID: 4810356527524111822}
+  - component: {fileID: 2936634099422349122}
+  - component: {fileID: 5140305706240838909}
+  - component: {fileID: 9199127287971542409}
+  m_Layer: 6
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -339,8 +343,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 3.28, y: 3.09, z: 3.14}
+  m_Center: {x: 0, y: 2.01, z: 0.72}
 --- !u!114 &4327123599771260106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,7 +371,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourceEventInvoker: {fileID: 0}
-  _storageZone: {fileID: 0}
+  _storageZone: {fileID: 8470212585949274035}
   _storagePlace: {fileID: 7264603559045067131}
 --- !u!114 &492710096843723820
 MonoBehaviour:
@@ -381,36 +385,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37bfe5f08c94409408f99ddab674e2c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1017396630584456444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4030470991490825334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 936d054ef870e4b4898b9f0a8e52dd20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _unitSearchingDelay: 3
---- !u!114 &7845469856250377152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4030470991490825334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5a06c305523b1e4ebb3770f20fad152, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _prefab: {fileID: 4741618601389713476, guid: a583491f65c28c944837047083dec8b9, type: 3}
-  _poolCapacity: 5
-  _poolMaximumSize: 8
-  _startUnitsCount: 3
-  _spawnOffsetRadius: 2
 --- !u!135 &2275659104700815740
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -444,6 +418,98 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65d30467fdccb0a42ae9bc56a5cdedbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7912038169431452896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4030470991490825334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a71d43c45547ed45b67ac67cffd8dd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unitSearchingDelay: 3
+--- !u!114 &3417912230743190544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4030470991490825334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf38f25559291d940ab87d83e6d3aa34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unitPrefab: {fileID: 6285543380112411338, guid: cce7704b0da88e44ab4d0c63d7952e65,
+    type: 3}
+  _poolCapacity: 3
+  _poolMaximumSize: 5
+  _unitCost: 5
+  _spawnOffsetRadius: 3
+--- !u!114 &4810356527524111822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4030470991490825334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a424de597db08bb409d0e7c124ae7195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flagPrefab: {fileID: 4428986891452071193, guid: aaaffafcd9c0c5b4f9781b0ea30bb120,
+    type: 3}
+  _buildingsLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &2936634099422349122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4030470991490825334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e37959fa190601244893b0802ef08f5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unitPrefab: {fileID: 1518334063496961038, guid: c8edf840c92a040428eace709620c4f4,
+    type: 3}
+  _poolCapacity: 5
+  _poolMaximumSize: 15
+  _unitCost: 3
+  _spawnOffsetRadius: 3
+  _startCount: 3
+--- !u!114 &5140305706240838909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4030470991490825334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0841f364554a004abc02918d74d9896, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unitSearchingDelay: 3
+--- !u!114 &9199127287971542409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4030470991490825334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9425bf6730db88449afdd1011ebbc58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4066471234402251177
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,7 +522,7 @@ GameObject:
   - component: {fileID: 4847751543871529760}
   - component: {fileID: 7252134595223176815}
   - component: {fileID: 6722496731239070402}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -561,7 +627,7 @@ GameObject:
   - component: {fileID: 7361106657442533114}
   - component: {fileID: 2176117463163278110}
   - component: {fileID: 4908348393740625276}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Front Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -666,7 +732,7 @@ GameObject:
   - component: {fileID: 8734207927667560830}
   - component: {fileID: 6241755176960475513}
   - component: {fileID: 3012888439074654004}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Back Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -771,7 +837,7 @@ GameObject:
   - component: {fileID: 4024530393881226417}
   - component: {fileID: 479559869392877442}
   - component: {fileID: 7495315752413754466}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Right Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -876,7 +942,7 @@ GameObject:
   - component: {fileID: 2937754607285674680}
   - component: {fileID: 6809258640346938030}
   - component: {fileID: 676873489186508076}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Second Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}

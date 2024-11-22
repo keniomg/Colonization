@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class CollectorSpawner : UnitSpawner<Collector>
 {
@@ -10,12 +11,20 @@ public class CollectorSpawner : UnitSpawner<Collector>
         SpawnStartCount();
     }
 
-    protected override void SpawnUnit()
+    protected override void AccompanyGet(Collector unit)
     {
-        if (Owner.FlagSetter.Flag == null)
+        base.AccompanyGet(unit);
+        unit.CollectorCommandController.Initialize(Owner);
+    }
+
+    protected override IEnumerator SpawnUnit()
+    {
+        if (Owner.FlagSetter.Flag == null && Owner.Storage.Count >= UnitCost)
         {
             base.SpawnUnit();
         }
+
+        yield return SpawnDelaySeconds;
     }
 
     private void SpawnStartCount()

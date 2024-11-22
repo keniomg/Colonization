@@ -2,6 +2,7 @@
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
+
 public class Chooser : MonoBehaviour
 {
     private Choosable _chosen;

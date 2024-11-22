@@ -7,6 +7,11 @@ public class Choosable : MonoBehaviour
 
     private PlayerInput _playerInput;
 
+    private void Awake()
+    {
+        _playerInput = GetComponent<PlayerInput>();
+    }
+
     public void ChangeChosenStatus(bool isChosen)
     {
         if (isChosen)

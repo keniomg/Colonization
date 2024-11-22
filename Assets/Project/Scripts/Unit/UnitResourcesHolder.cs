@@ -19,6 +19,7 @@ public class UnitResourcesHolder : MonoBehaviour
             _holdingResource = resource;
             HoldingStatusChanged?.Invoke(true);
             PlaceHoldingResource(resource);
+
             return true;
         }
 
@@ -27,14 +28,13 @@ public class UnitResourcesHolder : MonoBehaviour
 
     public bool GiveResource(Resource resource, ResourcesStorage storage)
     {
-        float distanceToTarget = Vector3.Distance(storage.transform.position, transform.position);
-
-        if (_holdingResource != null && distanceToTarget < _actionDistanceOffset)
+        if (_holdingResource != null && transform.position.IsEnoughDistance(storage.transform.position, _actionDistanceOffset))
         {
             DropResource(resource);
             storage.PlaceResource(resource);
             _holdingResource = null;
             HoldingStatusChanged?.Invoke(false);
+
             return true;
         }
 

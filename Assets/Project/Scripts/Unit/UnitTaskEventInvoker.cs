@@ -1,12 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class UnitTaskEventInvoker : ScriptableObject
+public abstract class UnitTaskEventInvoker<UnitType> : ScriptableObject where UnitType : Unit
 {
-    public event Action<Unit, UnitTaskStatusTypes> UnitTaskStatusChanged;
+    public event Action<UnitType, UnitTaskStatusTypes> UnitTaskStatusChanged;
 
-    public void Invoke(Unit unit, UnitTaskStatusTypes statusType)
+    public void Invoke(UnitType unit, UnitTaskStatusTypes statusType)
     {
         UnitTaskStatusChanged?.Invoke(unit, statusType);
     }

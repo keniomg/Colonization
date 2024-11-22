@@ -1,23 +1,28 @@
-﻿public class ColonizatorSpawner : UnitSpawner<Colonizator>
+﻿using System.Collections;
+
+public class ColonizatorSpawner : UnitSpawner<Colonizator>
 {
     protected override void AccompanyGet(Colonizator unit)
     {
         base.AccompanyGet(unit);
-        unit.BaseBuilded += OnBaseBuilded;
+        unit.ColonizatorCommandController.Initialize(Owner);
+        unit.Colonizer.Colonized += OnBaseBuilded;
     }
 
     protected override void AccompanyRelease(Colonizator unit)
     {
-        unit.BaseBuilded -= OnBaseBuilded;
+        unit.Colonizer.Colonized -= OnBaseBuilded;
         base.AccompanyRelease(unit);
     }
 
-    protected override void SpawnUnit()
+    protected override IEnumerator SpawnUnit()
     {
-        if (Owner.FlagSetter.Flag != null)
+        while (Owner.Storage.Count >= UnitCost && Owner.FlagSetter.Flag != null)
         {
             base.SpawnUnit();
         }
+
+        yield return SpawnDelaySeconds;
     }
 
     private void OnBaseBuilded(Colonizator unit)

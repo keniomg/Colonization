@@ -1,17 +1,16 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Colonizator : Unit 
+[RequireComponent(typeof(ColonizatorCommandController), typeof(UnitColonizer))]
+
+public class Colonizator : Unit
 {
-    private Base _basePrefab;
-    private Base _base;
+    public ColonizatorCommandController ColonizatorCommandController { get; private set; }
+    public UnitColonizer Colonizer { get; private set; }
 
-    public event Action<Colonizator> BaseBuilded;
-
-    public void Build(Vector3 buildPlace)
+    protected override void GetComponents()
     {
-        _base = Instantiate(_basePrefab);
-        _base.transform.position = buildPlace;
-        BaseBuilded?.Invoke(this);
+        base.GetComponents();
+        ColonizatorCommandController = GetComponent<ColonizatorCommandController>();
+        Colonizer = GetComponent<UnitColonizer>();
     }
 }

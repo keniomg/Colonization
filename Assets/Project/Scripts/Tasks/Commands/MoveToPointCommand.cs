@@ -1,26 +1,28 @@
 ﻿using UnityEngine;
 
-public class MoveToTargetCommand : ICommand
+public class MoveToPointCommand : ICommand
 {
     private UnitMover _unitMover;
-    private Transform _targetTransform;
     private bool _isComplete;
+    private Vector3 _pointPosition;
+    private Building _building;
     private UnitAnimationEventInvoker _unitAnimationEventInvoker;
 
     public bool IsComplete => _isComplete;
 
-    public MoveToTargetCommand(Unit unit, Transform targetTransform)
+    public MoveToPointCommand(Unit unit, Vector3 pointPosition, Building building = null)
     {
         _unitMover = unit.Mover;
         _unitAnimationEventInvoker = unit.AnimationEventInvoker;
-        _targetTransform = targetTransform;
+        _pointPosition = pointPosition;
+        _building = building;
     }
 
     public void Execute()
     {
         _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, true);
 
-        if (_unitMover.MoveToTarget(_targetTransform))
+        if (_unitMover.MoveToPoint(_pointPosition, _building))
         {
             _isComplete = true;
             _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, false);

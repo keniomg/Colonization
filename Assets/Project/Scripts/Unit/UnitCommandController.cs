@@ -2,27 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitCommandController : MonoBehaviour
+public abstract class UnitCommandController<UnitType> : MonoBehaviour where UnitType : Unit
 {
-    private Base _owner;
-    private Unit _selfUnit;
-    private UnitTaskEventInvoker _unitTaskEventInvoker;
+    protected Base Owner;
+    protected UnitTaskEventInvoker<UnitType> UnitTaskEventInvoker;
+    
+    private UnitType _selfUnit;
 
     public Queue<ICommand> Commands { get; private set; }
     public ICommand CurrentCommand { get; private set; }
 
     private void Awake()
     {
-        _selfUnit = TryGetComponent(out Unit unit) ? unit : null;
+        _selfUnit = TryGetComponent(out UnitType unit) ? unit : null;
         Commands = new Queue<ICommand>();
     }
 
-    public void Initialize(Base ownBase)
-    {
-        _owner = ownBase;
-        _unitTaskEventInvoker = _owner.UnitTaskEventInvoker;
-        StartCoroutine(HandleTask());
-    }
+    public abstract void Initialize(Base ownBase);
 
     public void AddCommand(ICommand command)
     {
@@ -38,11 +34,11 @@ public class UnitCommandController : MonoBehaviour
             AddCommand(command);
         }
 
-        _unitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Busy);
+        UnitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Busy);
         StartCoroutine(HandleTask());
     }
 
-    private IEnumerator HandleTask()
+    protected IEnumerator HandleTask()
     {
         while (Commands.Count > 0)
         {
@@ -64,6 +60,6 @@ public class UnitCommandController : MonoBehaviour
             }
         }
 
-        _unitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Free);
+        UnitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Free);
     }
 }

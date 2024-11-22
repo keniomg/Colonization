@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(Rigidbody), typeof(UnitCommandController), typeof(UnitResourcesHolder))]
 [RequireComponent(typeof(UnitMover), typeof(CapsuleCollider), typeof(UnitAnimationStatus))]
 [RequireComponent(typeof(UnitAnimator), typeof(Animator), typeof(NavMeshAgent))]
+[RequireComponent(typeof(Rigidbody))]
 
 public class Unit : MonoBehaviour
 {
@@ -13,9 +13,7 @@ public class Unit : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
 
     public UnitAnimationEventInvoker AnimationEventInvoker { get; private set; }
-    public Rigidbody Rigidbody {get; private set; }
-    public UnitCommandController CommandController { get; private set; }
-    public UnitResourcesHolder ResourcesHolder { get; private set; }
+    public Rigidbody Rigidbody { get; private set; }
     public UnitMover Mover { get; private set; }
 
     private void Awake()
@@ -24,17 +22,15 @@ public class Unit : MonoBehaviour
         InitializeComponents();
     }
 
-    private void GetComponents()
+    protected virtual void GetComponents()
     {
         AnimationEventInvoker = ScriptableObject.CreateInstance<UnitAnimationEventInvoker>();
 
-        CommandController = TryGetComponent(out UnitCommandController commandController) ? commandController : null;
-        ResourcesHolder = TryGetComponent(out UnitResourcesHolder unitResourcesHolder) ? unitResourcesHolder : null;
-        Mover = TryGetComponent(out UnitMover mover) ? mover : null;
-        _animator = TryGetComponent(out Animator animator) ? animator : null;
-        _unitAnimator = TryGetComponent(out UnitAnimator unitAnimator) ? unitAnimator : null;
-        _animationStatus = TryGetComponent(out UnitAnimationStatus unitAnimationStatus) ? unitAnimationStatus : null;
-        _navMeshAgent = TryGetComponent(out NavMeshAgent navMeshAgent) ? navMeshAgent : null;
+        Mover = GetComponent<UnitMover>();
+        _animator = GetComponent<Animator>();
+        _unitAnimator = GetComponent<UnitAnimator>();
+        _animationStatus = GetComponent<UnitAnimationStatus>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     private void InitializeComponents()

@@ -11,10 +11,13 @@
 
     public DeliverResourceCommand(Unit unit, ResourcesStorage storage, Resource resource)
     {
-        _resourcesHolder = unit.ResourcesHolder;
-        _unitAnimationEventInvoker = unit.AnimationEventInvoker;
-        _storage = storage;
-        _resource = resource;
+        if (unit.TryGetComponent(out UnitResourcesHolder unitResourcesHolder))
+        {
+            _resourcesHolder = unitResourcesHolder;
+            _unitAnimationEventInvoker = unit.AnimationEventInvoker;
+            _storage = storage;
+            _resource = resource;
+        }
     }
 
     public void Execute()

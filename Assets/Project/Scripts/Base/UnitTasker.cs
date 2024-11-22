@@ -1,43 +1,42 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
+public abstract class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
 {
     [SerializeField] private float _unitSearchingDelay;
+
+    protected UnitTaskEventInvoker<UnitType> UnitTaskEventInvoker;
+    protected Queue<Task> Tasks = new Queue<Task>();
+    protected Base Owner;
 
     private Dictionary<int, UnitType> _freeUnits = new Dictionary<int, UnitType>();
     private List<int> _unitsId = new List<int>();
     private WaitForSeconds _searchUnitDelay;
     private Coroutine _appointExecutors;
-    private UnitTaskEventInvoker _unitTaskEventInvoker;
 
-    protected Queue<Task> Tasks = new Queue<Task>();
-    
+    protected virtual void OnDisable()
+    {
+        UnitTaskEventInvoker.UnitTaskStatusChanged -= HandleUnitStatusChanged;
+    }
+
     private void Awake()
     {
         _searchUnitDelay = new(_unitSearchingDelay);
         _appointExecutors = null;
     }
 
-    protected virtual void OnDisable()
+    public virtual void Initialize(Base owner) 
     {
-        _unitTaskEventInvoker.UnitTaskStatusChanged -= HandleUnitStatusChanged;
+        Owner = owner;
     }
 
-    public virtual void Initialize(Base owner)
-    {
-        _unitTaskEventInvoker = owner.UnitTaskEventInvoker;
-        _unitTaskEventInvoker.UnitTaskStatusChanged += HandleUnitStatusChanged;
-    }
-
-    protected void DelegateTask()
+    protected void DelegateTasks()
     {
         _appointExecutors = StartCoroutine(AppointExecutors());
     }
 
-    private void HandleUnitStatusChanged(UnitType unit, UnitTaskStatusTypes statusType)
+    protected void HandleUnitStatusChanged(UnitType unit, UnitTaskStatusTypes statusType)
     {
         switch (statusType)
         {
@@ -48,6 +47,20 @@ public class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
                 AddFreeUnit(unit.gameObject.GetInstanceID(), unit);
                 break;
         }
+    }
+
+    protected abstract void GiveTask();
+
+    protected UnitType GetFreeUnit()
+    {
+        int defailtUnitIndex = 0;
+
+        if (_freeUnits.Count > 0)
+        {
+            return _freeUnits[_unitsId[defailtUnitIndex]];
+        }
+
+        return null;
     }
 
     private void RemoveFreeUnit(int id)
@@ -77,21 +90,9 @@ public class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
                 yield return _searchUnitDelay;
             }
 
-            GetFreeUnit().CommandController.AddTask(Tasks.Dequeue());
+            GiveTask();
         }
 
         _appointExecutors = null;
-    }
-
-    private UnitType GetFreeUnit()
-    {
-        int defailtUnitIndex = 0;
-
-        if (_freeUnits.Count > 0)
-        {
-            return _freeUnits[_unitsId[defailtUnitIndex]];
-        }
-
-        return null;
     }
 }

@@ -22,7 +22,7 @@ public class FlagSetter : MonoBehaviour
 
     public void Initialize(Base owner)
     {
-        _requiredRadius = owner.OccupiedZoneRadius;
+        _requiredRadius = owner.Building.OccupiedZoneRadius;
     }
 
     public void OnSetFlag(InputAction.CallbackContext context)
