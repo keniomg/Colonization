@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ResourcesScanner : MonoBehaviour
 {
-    [SerializeField] private Map _map;
+    private Map _map;
+    private ResourcesEventInvoker _resourcesEventInvoker;
 
     public Dictionary<int, Resource> ResourcesOnMap { get; private set; } = new Dictionary<int, Resource>();
 
@@ -20,6 +21,13 @@ public class ResourcesScanner : MonoBehaviour
     {
         _map.ResourceAppeared -= RegisterResource;
         _map.ResourceDisappeared -= UnregisterResource;
+    }
+
+    public void Initialize(ResourcesEventInvoker resourcesEventInvoker, Map map)
+    {
+        _map = map;
+        _resourcesEventInvoker = resourcesEventInvoker;
+        _resourcesEventInvoker.ResourceCollected += UnregisterResource;
     }
 
     private void RegisterResource(int id, Resource resource)

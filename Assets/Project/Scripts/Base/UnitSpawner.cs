@@ -70,11 +70,11 @@ public abstract class UnitSpawner<UnitType> : MonoBehaviour where UnitType : Uni
 
     private void OnFlagStatusChanged()
     {
-        SpawnUnit();
+        StartCoroutine(SpawnUnit());
     }
 
     private void OnResourcesChanged()
     {
-        SpawnUnit();
+        StartCoroutine(SpawnUnit());
     }
 }

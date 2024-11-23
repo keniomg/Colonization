@@ -21,7 +21,7 @@ public class CollectorSpawner : UnitSpawner<Collector>
     {
         if (Owner.FlagSetter.Flag == null && Owner.Storage.Count >= UnitCost)
         {
-            base.SpawnUnit();
+            StartCoroutine(base.SpawnUnit());
         }
 
         yield return SpawnDelaySeconds;

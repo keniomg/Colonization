@@ -7,6 +7,8 @@ public class FlagSetter : MonoBehaviour
     [SerializeField] private Flag _flagPrefab;
     [SerializeField] private LayerMask _buildingsLayer;
 
+    private Choosable _choosable;
+    private PlayerInput _playerInput;
     private float _requiredRadius;
     private Flag _flag;
 
@@ -16,13 +18,28 @@ public class FlagSetter : MonoBehaviour
 
     private void Awake()
     {
+        _playerInput = GetComponent<PlayerInput>();
+
+        if (_playerInput != null)
+        {
+            _playerInput.Disable(); // Отключаем ввод по умолчанию
+        }
+
+        Flag = null;
         _flag = Instantiate(_flagPrefab);
         _flag.gameObject.SetActive(false);
     }
 
-    public void Initialize(Base owner)
+    private void OnDisable()
+    {
+        _choosable.Choosed -= OnChoosed;
+    }
+
+    public void Initialize(Base owner, Choosable choosable)
     {
         _requiredRadius = owner.Building.OccupiedZoneRadius;
+        _choosable = choosable;
+        _choosable.Choosed += OnChoosed;
     }
 
     public void OnSetFlag(InputAction.CallbackContext context)
@@ -42,6 +59,18 @@ public class FlagSetter : MonoBehaviour
                     UnsetFlag();
                 }
             }
+        }
+    }
+
+    private void OnChoosed(bool isChosen)
+    {
+        if (isChosen)
+        {
+            _playerInput.Enable();
+        }
+        else
+        {
+            _playerInput.Disable();
         }
     }
 

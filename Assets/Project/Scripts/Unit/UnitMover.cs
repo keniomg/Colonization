@@ -24,6 +24,7 @@ public class UnitMover : MonoBehaviour
         if (transform.position.IsEnoughDistance(targetTransform.position, offset))
         {
             _navMeshAgent.ResetPath();
+
             return true;
         }
 
@@ -36,15 +37,16 @@ public class UnitMover : MonoBehaviour
 
         if (building != null)
         {
-            offset = building.OccupiedZoneRadius;
+            offset = building.OccupiedZoneRadius + _defaultOffsetDistance;
         }
 
         _navMeshAgent.SetDestination(position);
-        _navMeshAgent.stoppingDistance = offset - _defaultOffsetDistance;
+        _navMeshAgent.stoppingDistance = _defaultOffsetDistance;
 
         if (transform.position.IsEnoughDistance(position, offset))
         {
             _navMeshAgent.ResetPath();
+
             return true;
         }
 

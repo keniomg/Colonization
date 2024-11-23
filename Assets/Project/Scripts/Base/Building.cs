@@ -11,6 +11,21 @@ public class Building : MonoBehaviour
         GetOccupiedZoneRadius();
     }
 
+    public Map GetMap()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, OccupiedZoneRadius);
+
+        foreach (Collider hit in hits)
+        {
+            if (hit.TryGetComponent(out Map map))
+            {
+                return map;
+            }
+        }
+
+        return null;
+    }
+
     private void GetOccupiedZoneRadius()
     {
         if (TryGetComponent(out SphereCollider sphereCollider))

@@ -19,7 +19,7 @@ public class ColonizatorSpawner : UnitSpawner<Colonizator>
     {
         while (Owner.Storage.Count >= UnitCost && Owner.FlagSetter.Flag != null)
         {
-            base.SpawnUnit();
+            StartCoroutine(base.SpawnUnit());
         }
 
         yield return SpawnDelaySeconds;

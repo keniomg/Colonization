@@ -1,10 +1,9 @@
-﻿using UnityEngine;
-
-public class CollectorTasker : UnitTasker<Collector>
+﻿public class CollectorTasker : UnitTasker<Collector>
 {
     private CollectingResourcesRegister _collectingResourcesRegister;
     private ResourcesScanner _resourcesScanner;
     private ResourcesStorage _storage;
+    private ResourcesEventInvoker _resourcesEventInvoker;
 
     public override void Initialize(Base owner)
     {
@@ -15,6 +14,7 @@ public class CollectorTasker : UnitTasker<Collector>
         _resourcesScanner.FoundAvailableResource += HandleAvailableResource;
         _collectingResourcesRegister = Owner.CollectingResourcesRegister;
         _storage = Owner.Storage;
+        _resourcesEventInvoker = Owner.ResourcesEventInvoker;
     }
 
     protected override void OnDisable()
@@ -25,18 +25,14 @@ public class CollectorTasker : UnitTasker<Collector>
 
     protected override void GiveTask()
     {
-        if (Tasks.Count > 0)
-        {
-            GetFreeUnit().CollectorCommandController.AddTask(Tasks.Dequeue());
-           Debug.Log(1);
-        }
+        GetFreeUnit().CollectorCommandController.AddTask(Tasks.Dequeue());
     }
 
     private void HandleAvailableResource(int id, Resource resource)
     {
         if (_collectingResourcesRegister.CollectingResources.ContainsKey(id) == false)
         {
-            Tasks.Enqueue(new CollectResourceTask(resource, _storage, _collectingResourcesRegister, Owner));
+            Tasks.Enqueue(new CollectResourceTask(resource, Owner, _resourcesEventInvoker));
             DelegateTasks();
         }
     }

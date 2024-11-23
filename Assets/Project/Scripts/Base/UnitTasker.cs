@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
@@ -11,7 +12,6 @@ public abstract class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
     protected Base Owner;
 
     private Dictionary<int, UnitType> _freeUnits = new Dictionary<int, UnitType>();
-    private List<int> _unitsId = new List<int>();
     private WaitForSeconds _searchUnitDelay;
     private Coroutine _appointExecutors;
 
@@ -33,7 +33,7 @@ public abstract class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
 
     protected void DelegateTasks()
     {
-        _appointExecutors = StartCoroutine(AppointExecutors());
+        _appointExecutors ??= StartCoroutine(AppointExecutors());
     }
 
     protected void HandleUnitStatusChanged(UnitType unit, UnitTaskStatusTypes statusType)
@@ -53,11 +53,9 @@ public abstract class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
 
     protected UnitType GetFreeUnit()
     {
-        int defailtUnitIndex = 0;
-
         if (_freeUnits.Count > 0)
         {
-            return _freeUnits[_unitsId[defailtUnitIndex]];
+            return _freeUnits.ElementAt(Random.Range(0, _freeUnits.Count)).Value;
         }
 
         return null;
@@ -68,7 +66,6 @@ public abstract class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
         if (_freeUnits.ContainsKey(id))
         {
             _freeUnits.Remove(id);
-            _unitsId.Remove(id);
         }
     }
 
@@ -77,7 +74,6 @@ public abstract class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
         if (_freeUnits.ContainsKey(id) == false)
         {
             _freeUnits.Add(id, unit);
-            _unitsId.Add(id);
         }
     }
 

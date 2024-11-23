@@ -1,27 +1,27 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-[RequireComponent(typeof(PlayerInput))]
 public class Choosable : MonoBehaviour
 {
     [SerializeField] private ParticleSystem _highlight;
 
-    private PlayerInput _playerInput;
+    public event Action<bool> Choosed;
 
     private void Awake()
     {
-        _playerInput = GetComponent<PlayerInput>();
+        _highlight.Stop();
     }
 
     public void ChangeChosenStatus(bool isChosen)
     {
+        Choosed?.Invoke(isChosen);
+
         if (isChosen)
         {
-            _playerInput.Enable();
             Highlight();
         }
         else
         {
-            _playerInput.Disable();
             Unhighlight();
         }
     }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ResourcesStorage : MonoBehaviour
 {
-    [SerializeField] private ResourcesEventInvoker _resourceEventInvoker;
     [SerializeField] private BoxCollider _storageZone;
     [SerializeField] private Transform _storagePlace;
 
+    private ResourcesEventInvoker _resourceEventInvoker;
     private Dictionary<int, Resource> _resources = new Dictionary<int, Resource>();
 
     public event Action ValueChanged;
@@ -30,6 +31,11 @@ public class ResourcesStorage : MonoBehaviour
         }
     }
 
+    public void Initialize(ResourcesEventInvoker resourcesEventInvoker)
+    {
+        _resourceEventInvoker = resourcesEventInvoker;
+    }
+
     public void PlaceResource(Resource resource)
     {
         resource.transform.position = GetPlacePosition();
@@ -45,7 +51,8 @@ public class ResourcesStorage : MonoBehaviour
     {
         for (int i = 0; i < resourceCount; i++)
         {
-
+            Resource resource = _resources.ElementAt(UnityEngine.Random.Range(0, _resources.Count)).Value;
+            UnregisterResource(resource.gameObject.GetInstanceID(), resource);
         }
     }
 
