@@ -8,7 +8,7 @@ public class UnitColonizer : MonoBehaviour
     public bool Colonize(Vector3 position, Base owner, BuildingEventInvoker buildingEventInvoker)
     {
         Instantiate(owner, position, Quaternion.identity);
-        buildingEventInvoker.InvokeBuildingStarted(position);
+        buildingEventInvoker.InvokeBuildingStarted();
 
         if (TryGetComponent(out Colonizator colonizator))
         {

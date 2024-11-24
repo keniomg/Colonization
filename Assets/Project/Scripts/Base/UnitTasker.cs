@@ -20,14 +20,10 @@ public abstract class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
         UnitTaskEventInvoker.UnitTaskStatusChanged -= HandleUnitStatusChanged;
     }
 
-    private void Awake()
+    public virtual void Initialize(Base owner) 
     {
         _searchUnitDelay = new(_unitSearchingDelay);
         _appointExecutors = null;
-    }
-
-    public virtual void Initialize(Base owner) 
-    {
         Owner = owner;
     }
 

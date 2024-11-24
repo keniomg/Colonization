@@ -4,16 +4,16 @@ using UnityEngine;
 [CreateAssetMenu]
 public class BuildingEventInvoker : ScriptableObject
 {
-    public event Action<Vector3> BuildingPlanned;
-    public event Action<Vector3> BuildingStarted;
+    public event Action BuildingPlanned;
+    public event Action BuildingStarted;
 
-    public void InvokeBuldingPlanned(Vector3 position)
+    public void InvokeBuldingPlanned()
     {
-        BuildingPlanned?.Invoke(position);
+        BuildingPlanned?.Invoke();
     }
 
-    public void InvokeBuildingStarted(Vector3 position)
+    public void InvokeBuildingStarted()
     {
-        BuildingStarted?.Invoke(position);
+        BuildingStarted?.Invoke();
     }
 }

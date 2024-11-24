@@ -26,13 +26,12 @@
 
     private void HandleFlagSet()
     {
-        if (_flagSetter.Flag == null)
-        {
-            Tasks.Clear();
-        }
-        else
+        Tasks.Clear();
+
+        if (_flagSetter.Flag != null)
         {
             Tasks.Enqueue(new ColonizeTask(_flagSetter.Flag.transform.position, Owner, _buildingEventInvoker));
+            DelegateTasks();
         }
     }
 }

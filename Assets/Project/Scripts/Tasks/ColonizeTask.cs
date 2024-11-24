@@ -12,7 +12,7 @@ public class ColonizeTask : Task
 
         if (unit.TryGetComponent(out Colonizator colonizator))
         {
-            _buildingEventInvoker.InvokeBuldingPlanned(_flagPosition);
+            _buildingEventInvoker.InvokeBuldingPlanned();
             Commands.Enqueue(new MoveToPointCommand(Unit, _flagPosition, _owner.Building));
             Commands.Enqueue(new ColonizeCommand(colonizator, _owner, _flagPosition, _buildingEventInvoker));
         }

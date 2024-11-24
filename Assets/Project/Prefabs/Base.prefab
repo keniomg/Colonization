@@ -5130,6 +5130,7 @@ GameObject:
   - component: {fileID: 5140305706240838909}
   - component: {fileID: 9199127287971542409}
   - component: {fileID: 7456393585980855832}
+  - component: {fileID: 1072784850115200357}
   m_Layer: 6
   m_Name: Base
   m_TagString: Untagged
@@ -5298,6 +5299,7 @@ MonoBehaviour:
   _buildingsLayer:
     serializedVersion: 2
     m_Bits: 64
+  _inputEventInvoker: {fileID: 11400000, guid: ba448d4d10729a84e9cfb3e365bef6b0, type: 2}
 --- !u!114 &2936634099422349122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5355,6 +5357,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _highlight: {fileID: 6032507942589786747}
+--- !u!114 &1072784850115200357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4030470991490825334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba733dbe60481446b2b481469b18e0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _buildingPrefab: {fileID: 4030470991490825334, guid: fe7d6b5201e0320408cbdfb478c83363,
+    type: 3}
 --- !u!1 &4066471234402251177
 GameObject:
   m_ObjectHideFlags: 0

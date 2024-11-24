@@ -5,24 +5,33 @@ using UnityEngine.InputSystem;
 
 public class Chooser : MonoBehaviour
 {
+    [SerializeField] private InputEventInvoker _inputEventInvoker;
+
     private Choosable _chosen;
 
-    public void OnChoose(InputAction.CallbackContext context)
+    private void OnEnable()
     {
-        if (context.performed)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        _inputEventInvoker.LeftMouseClicked += OnLeftMouseClicked;
+    }
 
-            if (Physics.Raycast(ray, out RaycastHit hit))
+    private void OnDisable()
+    {
+        _inputEventInvoker.LeftMouseClicked -= OnLeftMouseClicked;
+    }
+
+    public void OnLeftMouseClicked()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (hit.collider.TryGetComponent(out Choosable choosable))
             {
-                if (hit.collider.TryGetComponent(out Choosable choosable))
-                {
-                    Choose(choosable);
-                }
-                else
-                {
-                    Unchoose();
-                }
+                Choose(choosable);
+            }
+            else
+            {
+                Unchoose();
             }
         }
     }

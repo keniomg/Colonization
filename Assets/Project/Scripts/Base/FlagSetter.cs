@@ -6,29 +6,18 @@ public class FlagSetter : MonoBehaviour
 {
     [SerializeField] private Flag _flagPrefab;
     [SerializeField] private LayerMask _buildingsLayer;
+    [SerializeField] private LayerMask _wallsLayer;
+    [SerializeField] private InputEventInvoker _inputEventInvoker;
 
     private Choosable _choosable;
-    private PlayerInput _playerInput;
-    private float _requiredRadius;
+    private float _requiredArea;
     private Flag _flag;
+    private BuildingEventInvoker _buildingEventInvoker;
+    MeshRenderer[] _flagMeshRenderers;
 
     public event Action FlagStatusChanged;
 
     public Flag Flag { get; private set; }
-
-    private void Awake()
-    {
-        _playerInput = GetComponent<PlayerInput>();
-
-        if (_playerInput != null)
-        {
-            _playerInput.Disable(); // Отключаем ввод по умолчанию
-        }
-
-        Flag = null;
-        _flag = Instantiate(_flagPrefab);
-        _flag.gameObject.SetActive(false);
-    }
 
     private void OnDisable()
     {
@@ -37,27 +26,30 @@ public class FlagSetter : MonoBehaviour
 
     public void Initialize(Base owner, Choosable choosable)
     {
-        _requiredRadius = owner.Building.OccupiedZoneRadius;
+        Flag = null;
+        _flag = Instantiate(_flagPrefab);
+        _flag.gameObject.SetActive(false);
+        _flagMeshRenderers = _flag.GetComponentsInChildren<MeshRenderer>();
+        _requiredArea = owner.Building.OccupiedZoneRadius;
         _choosable = choosable;
         _choosable.Choosed += OnChoosed;
+        _buildingEventInvoker = owner.BuildingEventInvoker;
+        _buildingEventInvoker.BuildingPlanned += UnsetFlag;
     }
 
-    public void OnSetFlag(InputAction.CallbackContext context)
+    public void OnRightMouseClicked()
     {
-        if (context.performed)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-            if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (hit.collider.TryGetComponent(out Map map) && GetFlagSetAvailable(hit.point))
             {
-                if (hit.collider.TryGetComponent(out Map map) && GetFlagSetAvailable(hit.point))
-                {
-                    SetFlag(hit.point);
-                }
-                else if (hit.collider.TryGetComponent(out Flag flag) && flag.gameObject == _flag.gameObject)
-                {
-                    UnsetFlag();
-                }
+                SetFlag(hit.point);
+            }
+            else if (hit.collider.TryGetComponent(out Flag flag) && flag.gameObject == _flag.gameObject)
+            {
+                UnsetFlag();
             }
         }
     }
@@ -66,36 +58,42 @@ public class FlagSetter : MonoBehaviour
     {
         if (isChosen)
         {
-            _playerInput.Enable();
+            _inputEventInvoker.RightMouseClicked += OnRightMouseClicked;
+            SetFlagVisibility(true);
         }
         else
         {
-            _playerInput.Disable();
+            _inputEventInvoker.RightMouseClicked -= OnRightMouseClicked;
+            SetFlagVisibility(false);
+        }
+    }
+
+    private void SetFlagVisibility(bool isVisible) 
+    {
+        foreach (MeshRenderer meshRenderer in _flagMeshRenderers) 
+        {
+            meshRenderer.enabled = isVisible; 
         }
     }
 
     private bool GetFlagSetAvailable(Vector3 areaCenter)
     {
-        if (Physics.OverlapSphere(areaCenter, _requiredRadius, _buildingsLayer) != null)
-        {
-            return true;
-        }
-
-        return false;
+        return (Physics.OverlapSphere(areaCenter, _requiredArea, _buildingsLayer).Length == 0 
+            && Physics.OverlapSphere(areaCenter, _requiredArea, _wallsLayer).Length == 0);
     }
 
     private void SetFlag(Vector3 flagPosition)
     {
         _flag.gameObject.SetActive(true);
         _flag.transform.position = flagPosition;
-        FlagStatusChanged?.Invoke();
         Flag = _flag;
+        FlagStatusChanged?.Invoke();
     }
 
     private void UnsetFlag()
     {
         _flag.gameObject.SetActive(false);
-        FlagStatusChanged?.Invoke();
         Flag = null;
+        FlagStatusChanged?.Invoke();
     }
 }

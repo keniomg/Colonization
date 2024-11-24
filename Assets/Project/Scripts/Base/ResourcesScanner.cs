@@ -11,12 +11,6 @@ public class ResourcesScanner : MonoBehaviour
 
     public event Action<int, Resource> FoundAvailableResource;
 
-    private void OnEnable()
-    {
-        _map.ResourceAppeared += RegisterResource;
-        _map.ResourceDisappeared += UnregisterResource;
-    }
-
     private void OnDisable()
     {
         _map.ResourceAppeared -= RegisterResource;
@@ -26,6 +20,8 @@ public class ResourcesScanner : MonoBehaviour
     public void Initialize(ResourcesEventInvoker resourcesEventInvoker, Map map)
     {
         _map = map;
+        _map.ResourceAppeared += RegisterResource;
+        _map.ResourceDisappeared += UnregisterResource;
         _resourcesEventInvoker = resourcesEventInvoker;
         _resourcesEventInvoker.ResourceCollected += UnregisterResource;
     }

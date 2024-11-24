@@ -28,7 +28,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             ""id"": ""c9349f14-044d-4889-92aa-de7b6f428b54"",
             ""actions"": [
                 {
-                    ""name"": ""Choose"",
+                    ""name"": ""LeftMouseClicked"",
                     ""type"": ""Button"",
                     ""id"": ""33701acd-a2a8-4ef0-a0d9-30bbd2c0078b"",
                     ""expectedControlType"": ""Button"",
@@ -37,7 +37,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SetFlag"",
+                    ""name"": ""RightMouseClicked"",
                     ""type"": ""Button"",
                     ""id"": ""a45182fd-edb9-4bbc-ba8b-2565c41e234c"",
                     ""expectedControlType"": ""Button"",
@@ -54,7 +54,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse"",
-                    ""action"": ""Choose"",
+                    ""action"": ""LeftMouseClicked"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -65,7 +65,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse"",
-                    ""action"": ""SetFlag"",
+                    ""action"": ""RightMouseClicked"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -88,8 +88,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_Choose = m_Player.FindAction("Choose", throwIfNotFound: true);
-        m_Player_SetFlag = m_Player.FindAction("SetFlag", throwIfNotFound: true);
+        m_Player_LeftMouseClicked = m_Player.FindAction("LeftMouseClicked", throwIfNotFound: true);
+        m_Player_RightMouseClicked = m_Player.FindAction("RightMouseClicked", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -151,14 +151,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_Player_Choose;
-    private readonly InputAction m_Player_SetFlag;
+    private readonly InputAction m_Player_LeftMouseClicked;
+    private readonly InputAction m_Player_RightMouseClicked;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
         public PlayerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Choose => m_Wrapper.m_Player_Choose;
-        public InputAction @SetFlag => m_Wrapper.m_Player_SetFlag;
+        public InputAction @LeftMouseClicked => m_Wrapper.m_Player_LeftMouseClicked;
+        public InputAction @RightMouseClicked => m_Wrapper.m_Player_RightMouseClicked;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -168,22 +168,22 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
-            @Choose.started += instance.OnChoose;
-            @Choose.performed += instance.OnChoose;
-            @Choose.canceled += instance.OnChoose;
-            @SetFlag.started += instance.OnSetFlag;
-            @SetFlag.performed += instance.OnSetFlag;
-            @SetFlag.canceled += instance.OnSetFlag;
+            @LeftMouseClicked.started += instance.OnLeftMouseClicked;
+            @LeftMouseClicked.performed += instance.OnLeftMouseClicked;
+            @LeftMouseClicked.canceled += instance.OnLeftMouseClicked;
+            @RightMouseClicked.started += instance.OnRightMouseClicked;
+            @RightMouseClicked.performed += instance.OnRightMouseClicked;
+            @RightMouseClicked.canceled += instance.OnRightMouseClicked;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
         {
-            @Choose.started -= instance.OnChoose;
-            @Choose.performed -= instance.OnChoose;
-            @Choose.canceled -= instance.OnChoose;
-            @SetFlag.started -= instance.OnSetFlag;
-            @SetFlag.performed -= instance.OnSetFlag;
-            @SetFlag.canceled -= instance.OnSetFlag;
+            @LeftMouseClicked.started -= instance.OnLeftMouseClicked;
+            @LeftMouseClicked.performed -= instance.OnLeftMouseClicked;
+            @LeftMouseClicked.canceled -= instance.OnLeftMouseClicked;
+            @RightMouseClicked.started -= instance.OnRightMouseClicked;
+            @RightMouseClicked.performed -= instance.OnRightMouseClicked;
+            @RightMouseClicked.canceled -= instance.OnRightMouseClicked;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -212,7 +212,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     }
     public interface IPlayerActions
     {
-        void OnChoose(InputAction.CallbackContext context);
-        void OnSetFlag(InputAction.CallbackContext context);
+        void OnLeftMouseClicked(InputAction.CallbackContext context);
+        void OnRightMouseClicked(InputAction.CallbackContext context);
     }
 }

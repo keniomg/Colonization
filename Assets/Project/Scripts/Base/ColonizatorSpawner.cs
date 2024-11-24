@@ -6,18 +6,18 @@ public class ColonizatorSpawner : UnitSpawner<Colonizator>
     {
         base.AccompanyGet(unit);
         unit.ColonizatorCommandController.Initialize(Owner);
-        unit.Colonizer.Colonized += OnBaseBuilded;
+        unit.Colonizer.Colonized += OnColonized;
     }
 
     protected override void AccompanyRelease(Colonizator unit)
     {
-        unit.Colonizer.Colonized -= OnBaseBuilded;
+        unit.Colonizer.Colonized -= OnColonized;
         base.AccompanyRelease(unit);
     }
 
     protected override IEnumerator SpawnUnit()
     {
-        while (Owner.Storage.Count >= UnitCost && Owner.FlagSetter.Flag != null)
+        if (Owner.Storage.Count >= UnitCost && Owner.FlagSetter.Flag != null)
         {
             StartCoroutine(base.SpawnUnit());
         }
@@ -25,7 +25,7 @@ public class ColonizatorSpawner : UnitSpawner<Colonizator>
         yield return SpawnDelaySeconds;
     }
 
-    private void OnBaseBuilded(Colonizator unit)
+    private void OnColonized(Colonizator unit)
     {
         Pool.Release(unit);
     }

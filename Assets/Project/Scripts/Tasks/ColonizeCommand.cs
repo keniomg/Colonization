@@ -12,6 +12,7 @@ public class ColonizeCommand : ICommand
 
     public ColonizeCommand(Colonizator colonizator, Base owner, Vector3 colonizePoint, BuildingEventInvoker buildingEventInvoker)
     {
+        _buildingEventInvoker = buildingEventInvoker;
         _unitColonizer = colonizator.Colonizer;
         _owner = owner;
         _colonizePoint = colonizePoint;

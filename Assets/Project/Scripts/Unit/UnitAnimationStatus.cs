@@ -7,6 +7,14 @@ public class UnitAnimationStatus : MonoBehaviour
     public bool IsHolding {get; private set; }
     public bool IsWalking {get; private set; }
 
+    private void OnEnable()
+    {
+        if (_unitAnimationEventInvoker != null)
+        {
+            _unitAnimationEventInvoker.AnimationChanged += OnAnimationChanged;
+        }
+    }
+
     private void OnDisable()
     {
         _unitAnimationEventInvoker.AnimationChanged -= OnAnimationChanged;

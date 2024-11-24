@@ -19,7 +19,7 @@ public class CollectorSpawner : UnitSpawner<Collector>
 
     protected override IEnumerator SpawnUnit()
     {
-        if (Owner.FlagSetter.Flag == null && Owner.Storage.Count >= UnitCost)
+        while (Owner.FlagSetter.Flag == null && Owner.Storage.Count >= UnitCost)
         {
             StartCoroutine(base.SpawnUnit());
         }
