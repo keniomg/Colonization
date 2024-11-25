@@ -23,8 +23,8 @@ public class BuildingPreviewer : MonoBehaviour
     {
         _flagSetter = flagSetter;
         _flagSetter.FlagStatusChanged += OnFlagStatusChanged;
-        _previewMeshRenderers = GetComponentsInChildren<MeshRenderer>();
         _buildingPreview = Instantiate(_buildingPrefab);
+        _previewMeshRenderers = _buildingPreview.GetComponentsInChildren<MeshRenderer>();
         _buildingPreview.SetActive(false);
         _choosable = choosable;
         _choosable.Choosed += OnChoosed;

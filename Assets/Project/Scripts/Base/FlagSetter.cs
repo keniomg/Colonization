@@ -22,12 +22,15 @@ public class FlagSetter : MonoBehaviour
     private void OnDisable()
     {
         _choosable.Choosed -= OnChoosed;
+        _flag.CollidedWithPreview -= UnsetFlag;
+        _buildingEventInvoker.BuildingPlanned -= UnsetFlag;
     }
 
     public void Initialize(Base owner, Choosable choosable)
     {
         Flag = null;
         _flag = Instantiate(_flagPrefab);
+        _flag.CollidedWithPreview += UnsetFlag;
         _flag.gameObject.SetActive(false);
         _flagMeshRenderers = _flag.GetComponentsInChildren<MeshRenderer>();
         _requiredArea = owner.Building.OccupiedZoneRadius;
