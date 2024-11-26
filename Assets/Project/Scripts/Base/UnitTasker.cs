@@ -8,7 +8,7 @@ public abstract class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
     [SerializeField] private float _unitSearchingDelay;
 
     protected UnitTaskEventInvoker<UnitType> UnitTaskEventInvoker;
-    protected Queue<Task> Tasks = new Queue<Task>();
+    protected List<Task> Tasks = new List<Task>();
     protected Base Owner;
 
     private Dictionary<int, UnitType> _freeUnits = new Dictionary<int, UnitType>();
@@ -55,6 +55,11 @@ public abstract class UnitTasker<UnitType> : MonoBehaviour where UnitType : Unit
         }
 
         return null;
+    }
+
+    protected Task GetRandomTask()
+    {
+        return Tasks[Random.Range(0, Tasks.Count)];
     }
 
     private void RemoveFreeUnit(int id)

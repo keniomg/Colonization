@@ -24,15 +24,15 @@ public class BuildingPreviewer : MonoBehaviour
         _flagSetter = flagSetter;
         _flagSetter.FlagStatusChanged += OnFlagStatusChanged;
         _buildingPreview = Instantiate(_buildingPrefab);
+        _transparencyValue = 0.5f;
         _previewMeshRenderers = _buildingPreview.GetComponentsInChildren<MeshRenderer>();
+        SetPrefabTransparency();
         _buildingPreview.SetActive(false);
         _choosable = choosable;
         _choosable.Choosed += OnChoosed;
         _buildingEventInvoker = buildingEventInvoker;
         _buildingEventInvoker.BuildingPlanned += OnBuildingPlanned;
         _buildingEventInvoker.BuildingStarted += OnBuildingStarted;
-        _transparencyValue = 0.5f;
-        SetPrefabTransparency();
     }
 
     private void OnBuildingPlanned()
@@ -50,8 +50,21 @@ public class BuildingPreviewer : MonoBehaviour
     {
         foreach (MeshRenderer meshRenderer in _previewMeshRenderers)
         {
-            Color color = meshRenderer.material.color;
+            meshRenderer.material.SetFloat("_Surface", 1);
+            meshRenderer.material.SetOverrideTag("RenderType", "Transparent");
+            meshRenderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            meshRenderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            meshRenderer.material.SetInt("_ZWrite", 0);
+            meshRenderer.material.DisableKeyword("_ALPHATEST_ON");
+            meshRenderer.material.EnableKeyword("_ALPHABLEND_ON");
+            meshRenderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            meshRenderer.material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            Material material = meshRenderer.material;
+            Color color = material.color;
             color.a = _transparencyValue;
+            Debug.Log(color.a);
+            material.color = color;
+            Debug.Log(meshRenderer.material.color.a);
         }
     }
 
