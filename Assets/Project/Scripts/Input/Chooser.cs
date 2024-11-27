@@ -2,7 +2,6 @@
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
-
 public class Chooser : MonoBehaviour
 {
     [SerializeField] private InputEventInvoker _inputEventInvoker;

@@ -62,9 +62,7 @@ public class BuildingPreviewer : MonoBehaviour
             Material material = meshRenderer.material;
             Color color = material.color;
             color.a = _transparencyValue;
-            Debug.Log(color.a);
             material.color = color;
-            Debug.Log(meshRenderer.material.color.a);
         }
     }
 

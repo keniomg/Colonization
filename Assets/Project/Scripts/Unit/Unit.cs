@@ -4,7 +4,6 @@ using UnityEngine.AI;
 [RequireComponent(typeof(UnitMover), typeof(CapsuleCollider), typeof(UnitAnimationStatus))]
 [RequireComponent(typeof(UnitAnimator), typeof(Animator), typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
-
 public class Unit : MonoBehaviour
 {
     private Animator _animator;

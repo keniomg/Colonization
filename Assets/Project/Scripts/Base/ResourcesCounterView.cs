@@ -5,16 +5,19 @@ public class ResourcesCounterView : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _resources;
     [SerializeField] private string _defaultText;
-    [SerializeField] private ResourcesStorage _resourcesStorage;
 
-    private void OnEnable()
-    {
-        _resourcesStorage.ValueChanged += OnValueChanged;
-    }
+    private ResourcesStorage _resourcesStorage;
 
     private void OnDisable()
     {
         _resourcesStorage.ValueChanged -= OnValueChanged;
+    }
+
+    public void Initialize(ResourcesStorage resourcesStorage)
+    {
+        _resourcesStorage = resourcesStorage;
+        _resourcesStorage.ValueChanged += OnValueChanged;
+        OnValueChanged();
     }
 
     private void OnValueChanged()

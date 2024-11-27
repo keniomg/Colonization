@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
-
 public class Building : MonoBehaviour
 {
     public float OccupiedZoneRadius { get; private set; }

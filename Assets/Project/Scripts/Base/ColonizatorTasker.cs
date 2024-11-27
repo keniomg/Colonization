@@ -21,7 +21,9 @@
 
     protected override void GiveTask()
     {
-        GetFreeUnit().ColonizatorCommandController.AddTask(Tasks.Dequeue());
+        Task givingTask = GetRandomTask();
+        GetFreeUnit().ColonizatorCommandController.AddTask(givingTask);
+        Tasks.Remove(givingTask);
     }
 
     private void HandleFlagSet()
@@ -30,7 +32,7 @@
 
         if (_flagSetter.Flag != null)
         {
-            Tasks.Enqueue(new ColonizeTask(_flagSetter.Flag.transform.position, Owner, _buildingEventInvoker));
+            Tasks.Add(new ColonizeTask(_flagSetter.Flag.transform.position, Owner, _buildingEventInvoker));
             DelegateTasks();
         }
     }

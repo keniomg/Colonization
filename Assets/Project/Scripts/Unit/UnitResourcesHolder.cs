@@ -10,14 +10,15 @@ public class UnitResourcesHolder : MonoBehaviour
 
     public event Action<bool> HoldingStatusChanged;
 
-    public bool TakeResource(Resource resource, ResourcesEventInvoker resourcesEventInvoker)
+    public bool TakeResource(Resource resource, Base owner)
     {
-        if (_holdingResource == null && transform.position.IsEnoughDistance(resource.transform.position, _actionDistanceOffset))
+        if (_holdingResource == null && transform.position.IsEnoughDistance(resource.transform.position, _actionDistanceOffset)
+            && owner.ResourcesScanner.GetResourceOnMap(resource))
         {
             _holdingResource = resource;
             HoldingStatusChanged?.Invoke(true);
             PlaceHoldingResource(resource);
-            resourcesEventInvoker.InvokeResourceCollected(resource.gameObject.GetInstanceID(), resource);
+            owner.ResourcesEventInvoker.InvokeResourceCollected(resource.gameObject.GetInstanceID(), resource);
 
             return true;
         }

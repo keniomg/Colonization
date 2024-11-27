@@ -6,8 +6,7 @@ public class ResourcesScanner : MonoBehaviour
 {
     private Map _map;
     private ResourcesEventInvoker _resourcesEventInvoker;
-
-    public Dictionary<int, Resource> ResourcesOnMap { get; private set; } = new Dictionary<int, Resource>();
+    private Dictionary<int, Resource> _resourcesOnMap = new Dictionary<int, Resource>();
 
     public event Action<int, Resource> FoundAvailableResource;
 
@@ -26,20 +25,25 @@ public class ResourcesScanner : MonoBehaviour
         _resourcesEventInvoker.ResourceCollected += UnregisterResource;
     }
 
+    public bool GetResourceOnMap(Resource resource)
+    {
+        return _resourcesOnMap.ContainsKey(resource.gameObject.GetInstanceID());
+    }
+
     private void RegisterResource(int id, Resource resource)
     {
-        if (ResourcesOnMap.ContainsKey(id) == false)
+        if (_resourcesOnMap.ContainsKey(id) == false)
         {
-            ResourcesOnMap.Add(id, resource);
+            _resourcesOnMap.Add(id, resource);
             FoundAvailableResource?.Invoke(id, resource);
         }
     }
 
     private void UnregisterResource(int id, Resource resource)
     {
-        if (ResourcesOnMap.ContainsKey(id))
+        if (_resourcesOnMap.ContainsKey(id))
         {
-            ResourcesOnMap.Remove(id);
+            _resourcesOnMap.Remove(id);
         }
     }
 }

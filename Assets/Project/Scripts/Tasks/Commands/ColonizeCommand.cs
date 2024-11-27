@@ -7,8 +7,10 @@ public class ColonizeCommand : ICommand
     private Vector3 _colonizePoint;
     private bool _isComplete;
     private BuildingEventInvoker _buildingEventInvoker;
+    private bool _isInterrupted;
 
     public bool IsComplete => _isComplete;
+    public bool IsInterrupted => _isInterrupted;
 
     public ColonizeCommand(Colonizator colonizator, Base owner, Vector3 colonizePoint, BuildingEventInvoker buildingEventInvoker)
     {
@@ -23,6 +25,10 @@ public class ColonizeCommand : ICommand
         if (_unitColonizer.Colonize(_colonizePoint, _owner, _buildingEventInvoker))
         {
             _isComplete = true;
+        }
+        else
+        {
+            _isInterrupted = true;
         }
     }
 }

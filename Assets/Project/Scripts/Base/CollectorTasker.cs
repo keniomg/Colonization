@@ -2,8 +2,6 @@
 {
     private CollectingResourcesRegister _collectingResourcesRegister;
     private ResourcesScanner _resourcesScanner;
-    private ResourcesStorage _storage;
-    private ResourcesEventInvoker _resourcesEventInvoker;
 
     public override void Initialize(Base owner)
     {
@@ -13,9 +11,6 @@
         _resourcesScanner = Owner.ResourcesScanner;
         _resourcesScanner.FoundAvailableResource += HandleAvailableResource;
         _collectingResourcesRegister = Owner.CollectingResourcesRegister;
-        _storage = Owner.Storage;
-        _resourcesEventInvoker = Owner.ResourcesEventInvoker;
-        _resourcesEventInvoker.ResourceCollected += HandleResourceUnavailable;
     }
 
     protected override void OnDisable()
@@ -33,20 +28,10 @@
 
     private void HandleAvailableResource(int id, Resource resource)
     {
-        if (_collectingResourcesRegister.CollectingResources.ContainsKey(id) == false)
+        if (_collectingResourcesRegister.GetResourceCollecting(id) == false)
         {
-            Tasks.Add(new CollectResourceTask(resource, Owner, _resourcesEventInvoker));
+            Tasks.Add(new CollectResourceTask(resource, Owner));
             DelegateTasks();
-        }
-    }
-
-    private void HandleResourceUnavailable(int id, Resource resource)
-    {
-        Task task = new CollectResourceTask(resource, Owner, _resourcesEventInvoker);
-
-        if (Tasks.Contains(task))
-        {
-            Tasks.Remove(task);
         }
     }
 }

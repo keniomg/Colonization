@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(ColonizatorCommandController), typeof(UnitColonizer))]
-
 public class Colonizator : Unit
 {
     public ColonizatorCommandController ColonizatorCommandController { get; private set; }

@@ -5,7 +5,7 @@ public class UnitMover : MonoBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _offsetToPoint;
-    
+
     private float _defaultOffsetDistance;
     private NavMeshAgent _navMeshAgent;
 
@@ -14,18 +14,25 @@ public class UnitMover : MonoBehaviour
         _defaultOffsetDistance = transform.localScale.y;
     }
 
-    public bool MoveToTarget(Transform targetTransform)
+    public bool MoveToTarget(Transform targetTransform, ref bool isInterrupted)
     {
-        float offset = _offsetToPoint;
-
-        _navMeshAgent.SetDestination(targetTransform.position);
-        _navMeshAgent.stoppingDistance = offset - _defaultOffsetDistance;
-
-        if (transform.position.IsEnoughDistance(targetTransform.position, offset))
+        if (targetTransform != null)
         {
-            _navMeshAgent.ResetPath();
+            float offset = _offsetToPoint;
 
-            return true;
+            _navMeshAgent.SetDestination(targetTransform.position);
+            _navMeshAgent.stoppingDistance = offset - _defaultOffsetDistance;
+
+            if (transform.position.IsEnoughDistance(targetTransform.position, offset))
+            {
+                _navMeshAgent.ResetPath();
+
+                return true;
+            }
+        }
+        else
+        {
+            isInterrupted = true;
         }
 
         return false;

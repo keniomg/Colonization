@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(CollectingResourcesRegister), typeof(CollectorTasker), typeof(ColonizatorSpawner))]
 [RequireComponent(typeof(FlagSetter), typeof(CollectorSpawner), typeof(ColonizatorTasker))]
 [RequireComponent(typeof(Building), typeof(Choosable), typeof(BuildingPreviewer))]
-
+[RequireComponent(typeof(ResourcesCounterView))]
 public class Base : MonoBehaviour
 {
     [field: SerializeField] public ResourcesEventInvoker ResourcesEventInvoker { get; private set; }
@@ -15,6 +15,7 @@ public class Base : MonoBehaviour
     private CollectorSpawner _collectorSpawner;
     private ColonizatorSpawner _colonizatorSpawner;
     private Choosable _choosable;
+    private ResourcesCounterView _resourcesCounterView;
 
     public Building Building { get; private set; }
     public BuildingEventInvoker BuildingEventInvoker { get; private set; }
@@ -49,6 +50,7 @@ public class Base : MonoBehaviour
         _colonizatorTasker = GetComponent<ColonizatorTasker>();
         _collectorSpawner = GetComponent<CollectorSpawner>();
         _colonizatorSpawner = GetComponent<ColonizatorSpawner>();
+        _resourcesCounterView = GetComponent<ResourcesCounterView>();
     }
 
     private void InitializeComponents()
@@ -61,5 +63,6 @@ public class Base : MonoBehaviour
         Storage.Initialize(ResourcesEventInvoker);
         FlagSetter.Initialize(this, _choosable);
         _buildingPreviewer.Initialize(FlagSetter, BuildingEventInvoker, _choosable);
+        _resourcesCounterView.Initialize(Storage);
     }
 }

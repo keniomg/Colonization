@@ -3,21 +3,26 @@ using UnityEngine;
 
 public class CollectingResourcesRegister : MonoBehaviour
 {
-    public Dictionary<int, Resource> CollectingResources { get; private set; } = new Dictionary<int, Resource>();
+    private Dictionary<int, Resource> _collectingResources = new Dictionary<int, Resource>();
 
     public void RegisterCollectingResource(int id, Resource resource)
     {
-        if (CollectingResources.ContainsKey(id) == false)
+        if (_collectingResources.ContainsKey(id) == false)
         {
-            CollectingResources.Add(id, resource);
+            _collectingResources.Add(id, resource);
         }
     }
 
     public void UnregisterCollectingResource(int id, Resource resource)
     {
-        if (CollectingResources.ContainsKey(id))
+        if (_collectingResources.ContainsKey(id))
         {
-            CollectingResources.Remove(id);
+            _collectingResources.Remove(id);
         }
+    }
+
+    public bool GetResourceCollecting(int id)
+    {
+        return _collectingResources.ContainsKey(id);
     }
 }

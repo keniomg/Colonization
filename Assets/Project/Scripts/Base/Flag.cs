@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CapsuleCollider))]
-
 public class Flag : MonoBehaviour 
 {
     public event Action CollidedWithPreview;
