@@ -2,11 +2,11 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
-public abstract class UnitSpawner<UnitType> : MonoBehaviour where UnitType : Unit
+public abstract class UnitSpawner : MonoBehaviour
 {
     [SerializeField] protected int UnitCost;
 
-    [SerializeField] private UnitType _unitPrefab;
+    [SerializeField] private Unit _unitPrefab;
     [SerializeField] private int _poolCapacity;
     [SerializeField] private int _poolMaximumSize;
     [SerializeField] private float _spawnOffsetRadius;
@@ -14,16 +14,16 @@ public abstract class UnitSpawner<UnitType> : MonoBehaviour where UnitType : Uni
     private float _spawnDelay;
 
     protected WaitForSeconds SpawnDelaySeconds;
-    protected ObjectPool<UnitType> Pool;
+    protected ObjectPool<Unit> Pool;
     protected Base Owner;
 
     public virtual void Initialize(Base owner)
     {
-        Pool = new ObjectPool<UnitType>(
+        Pool = new ObjectPool<Unit>(
                 createFunc: () => Instantiate(_unitPrefab),
                 actionOnGet: (unit) => AccompanyGet(unit),
                 actionOnRelease: (unit) => AccompanyRelease(unit),
-                actionOnDestroy: (unit) => Destroy(unit),
+                actionOnDestroy: (unit) => Destroy(unit.gameObject),
                 collectionCheck: true,
                 defaultCapacity: _poolCapacity,
                 maxSize: _poolMaximumSize);
@@ -34,7 +34,7 @@ public abstract class UnitSpawner<UnitType> : MonoBehaviour where UnitType : Uni
         Owner.FlagSetter.FlagStatusChanged += OnFlagStatusChanged;
     }
 
-    protected virtual void AccompanyGet(UnitType unit)
+    protected virtual void AccompanyGet(Unit unit)
     {
         unit.gameObject.SetActive(true);
         unit.transform.position = GetSpawnPosition();
@@ -48,7 +48,7 @@ public abstract class UnitSpawner<UnitType> : MonoBehaviour where UnitType : Uni
         yield return null;
     }
 
-    protected virtual void AccompanyRelease(UnitType unit)
+    protected virtual void AccompanyRelease(Unit unit)
     {
         unit.gameObject.SetActive(false);
     }

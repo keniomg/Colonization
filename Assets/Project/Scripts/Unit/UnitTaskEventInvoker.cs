@@ -1,11 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-public abstract class UnitTaskEventInvoker<UnitType> : ScriptableObject where UnitType : Unit
+public abstract class UnitTaskEventInvoker : ScriptableObject
 {
-    public event Action<UnitType, UnitTaskStatusTypes> UnitTaskStatusChanged;
+    public event Action<Unit, UnitTaskStatusTypes> UnitTaskStatusChanged;
 
-    public void Invoke(UnitType unit, UnitTaskStatusTypes statusType)
+    public void Invoke(Unit unit, UnitTaskStatusTypes statusType)
     {
         UnitTaskStatusChanged?.Invoke(unit, statusType);
     }

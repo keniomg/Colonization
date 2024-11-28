@@ -14,6 +14,9 @@ public class Unit : MonoBehaviour
     public UnitAnimationEventInvoker AnimationEventInvoker { get; private set; }
     public Rigidbody Rigidbody { get; private set; }
     public UnitMover Mover { get; private set; }
+    public UnitCommandController UnitCommandController { get; private set; }
+    public UnitResourcesHolder ResourcesHolder { get; private set; }
+    public UnitColonizer Colonizer { get; private set; }
 
     private void Awake()
     {
@@ -30,6 +33,8 @@ public class Unit : MonoBehaviour
         _unitAnimator = GetComponent<UnitAnimator>();
         _animationStatus = GetComponent<UnitAnimationStatus>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
+        Colonizer = GetComponent<UnitColonizer>();
+        ResourcesHolder = GetComponent<UnitResourcesHolder>();
     }
 
     private void InitializeComponents()

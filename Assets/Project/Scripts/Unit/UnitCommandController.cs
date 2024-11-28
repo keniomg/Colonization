@@ -2,21 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class UnitCommandController<UnitType> : MonoBehaviour where UnitType : Unit
+public abstract class UnitCommandController : MonoBehaviour
 {
     protected Base Owner;
-    protected UnitTaskEventInvoker<UnitType> UnitTaskEventInvoker;
+    protected UnitTaskEventInvoker UnitTaskEventInvoker;
 
-    private UnitType _selfUnit;
+    private Unit _selfUnit;
     private Queue<ICommand> _commands = new Queue<ICommand>();
     private ICommand _currentCommand;
 
     private void Awake()
     {
-        _selfUnit = TryGetComponent(out UnitType unit) ? unit : null;
+        _selfUnit = TryGetComponent(out Unit unit) ? unit : null;
     }
 
-    public abstract void Initialize(Base ownBase);
+    public void Initialize(Base owner)
+    {
+        Owner = owner;
+        UnitTaskEventInvoker = Owner.UnitTaskEventInvoker;
+        StartCoroutine(HandleTask());
+    }
 
     public void AddCommand(ICommand command)
     {

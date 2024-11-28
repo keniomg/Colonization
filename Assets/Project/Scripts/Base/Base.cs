@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider), typeof(ResourcesScanner), typeof(ResourcesStorage))]
-[RequireComponent(typeof(CollectingResourcesRegister), typeof(CollectorTasker), typeof(ColonizatorSpawner))]
+[RequireComponent(typeof(CollectingResourcesRegister), typeof(ColonizatorSpawner))]
 [RequireComponent(typeof(FlagSetter), typeof(CollectorSpawner), typeof(ColonizatorTasker))]
 [RequireComponent(typeof(Building), typeof(Choosable), typeof(BuildingPreviewer))]
 [RequireComponent(typeof(ResourcesCounterView))]
@@ -10,10 +10,8 @@ public class Base : MonoBehaviour
     [field: SerializeField] public ResourcesEventInvoker ResourcesEventInvoker { get; private set; }
 
     private BuildingPreviewer _buildingPreviewer;
-    private CollectorTasker _collectorTasker;
-    private ColonizatorTasker _colonizatorTasker;
-    private CollectorSpawner _collectorSpawner;
-    private ColonizatorSpawner _colonizatorSpawner;
+    private UnitTasker _unitTasker;
+    private UnitSpawner _unitSpawner;
     private Choosable _choosable;
     private ResourcesCounterView _resourcesCounterView;
 
@@ -22,8 +20,7 @@ public class Base : MonoBehaviour
     public ResourcesScanner ResourcesScanner { get; private set; }
     public ResourcesStorage Storage { get; private set; }
     public CollectingResourcesRegister CollectingResourcesRegister { get; private set; }
-    public CollectorTaskEventInvoker CollectorTaskEventInvoker { get; private set; }
-    public ColonizatorTaskEventInvoker ColonizatorTaskEventInvoker { get; private set; }
+    public UnitTaskEventInvoker UnitTaskEventInvoker { get; private set; }
     public FlagSetter FlagSetter { get; private set; }
 
     private void Awake()
@@ -34,8 +31,7 @@ public class Base : MonoBehaviour
 
     private void GetComponents()
     {
-        CollectorTaskEventInvoker = ScriptableObject.CreateInstance<CollectorTaskEventInvoker>();
-        ColonizatorTaskEventInvoker = ScriptableObject.CreateInstance<ColonizatorTaskEventInvoker>();
+        UnitTaskEventInvoker = ScriptableObject.CreateInstance<UnitTaskEventInvoker>();
         BuildingEventInvoker = ScriptableObject.CreateInstance<BuildingEventInvoker>();
 
         Building = GetComponent<Building>();
@@ -46,19 +42,15 @@ public class Base : MonoBehaviour
         
         _buildingPreviewer = GetComponent<BuildingPreviewer>();
         _choosable = GetComponent<Choosable>();
-        _collectorTasker = GetComponent<CollectorTasker>();
-        _colonizatorTasker = GetComponent<ColonizatorTasker>();
-        _collectorSpawner = GetComponent<CollectorSpawner>();
-        _colonizatorSpawner = GetComponent<ColonizatorSpawner>();
+        _unitTasker = GetComponent<UnitTasker>();
+        _unitSpawner = GetComponent<UnitSpawner>();
         _resourcesCounterView = GetComponent<ResourcesCounterView>();
     }
 
     private void InitializeComponents()
     {
-        _collectorTasker.Initialize(this);
-        _colonizatorTasker.Initialize(this);
-        _collectorSpawner.Initialize(this);
-        _colonizatorSpawner.Initialize(this);
+        _unitTasker.Initialize(this);
+        _unitSpawner.Initialize(this);
         ResourcesScanner.Initialize(ResourcesEventInvoker, Building.GetMap());
         Storage.Initialize(ResourcesEventInvoker);
         FlagSetter.Initialize(this, _choosable);

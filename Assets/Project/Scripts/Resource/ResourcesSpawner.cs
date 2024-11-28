@@ -22,7 +22,7 @@ public class ResourcesSpawner : MonoBehaviour
               createFunc: () => Instantiate(_resourcePrefab),
               actionOnGet: (resource) => AccompanyGet(resource),
               actionOnRelease: (resource) => AccompanyRelease(resource),
-              actionOnDestroy: (resource) => Destroy(resource),
+              actionOnDestroy: (resource) => Destroy(resource.gameObject),
               collectionCheck: true,
               defaultCapacity: _poolCapacity,
               maxSize: _poolMaximumSize);
