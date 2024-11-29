@@ -2,24 +2,26 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
-public abstract class UnitSpawner : MonoBehaviour
+public class UnitSpawner : MonoBehaviour
 {
-    [SerializeField] protected int UnitCost;
-
     [SerializeField] private Unit _unitPrefab;
     [SerializeField] private int _poolCapacity;
     [SerializeField] private int _poolMaximumSize;
     [SerializeField] private float _spawnOffsetRadius;
+    [SerializeField] private int _startCount;
 
-    private float _spawnDelay;
+    private int _unitCost;
+    private ObjectPool<Unit> _pool;
+    private Base _owner;
+    private bool _isSpawning;
+    private WaitForSeconds _spawnDelay;
+    private float _delay;
 
-    protected WaitForSeconds SpawnDelaySeconds;
-    protected ObjectPool<Unit> Pool;
-    protected Base Owner;
+    public int UnitsCount { get; private set; }
 
-    public virtual void Initialize(Base owner)
+    public void Initialize(Base owner)
     {
-        Pool = new ObjectPool<Unit>(
+        _pool = new ObjectPool<Unit>(
                 createFunc: () => Instantiate(_unitPrefab),
                 actionOnGet: (unit) => AccompanyGet(unit),
                 actionOnRelease: (unit) => AccompanyRelease(unit),
@@ -28,34 +30,47 @@ public abstract class UnitSpawner : MonoBehaviour
                 defaultCapacity: _poolCapacity,
                 maxSize: _poolMaximumSize);
 
-        SpawnDelaySeconds = new(_spawnDelay);
-        Owner = owner;
-        Owner.Storage.ValueChanged += OnResourcesChanged;
-        Owner.FlagSetter.FlagStatusChanged += OnFlagStatusChanged;
+        _delay = 1;
+        _spawnDelay = new WaitForSeconds(_delay);
+        UnitsCount = 0;
+        _unitCost = 3;
+        _owner = owner;
+        _owner.Storage.ValueChanged += SpawnRes;
+        _owner.FlagSetter.FlagStatusChanged += SpawnFlag;
+        SpawnStartCount();
     }
 
-    protected virtual void AccompanyGet(Unit unit)
+    private void AccompanyGet(Unit unit)
     {
+        UnitsCount++;
         unit.gameObject.SetActive(true);
         unit.transform.position = GetSpawnPosition();
+        unit.UnitCommandController.Initialize(_owner.UnitTaskEventInvoker);
+        unit.Colonizer.Colonized += OnColonized;
     }
 
-    protected virtual IEnumerator SpawnUnit()
+    private void AccompanyRelease(Unit unit)
     {
-        Owner.Storage.PayResource(UnitCost);
-        Pool.Get();
-
-        yield return null;
-    }
-
-    protected virtual void AccompanyRelease(Unit unit)
-    {
+        UnitsCount--;
         unit.gameObject.SetActive(false);
+    }
+
+    private void OnColonized()
+    {
+        UnitsCount--;
+    }
+
+    private void SpawnStartCount()
+    {
+        for (int i = 0; i < _startCount; i++)
+        {
+            _pool.Get();
+        }
     }
 
     private Vector3 GetSpawnPosition()
     {
-        float minimumSpawnDistance = Owner.Building.OccupiedZoneRadius;
+        float minimumSpawnDistance = _owner.Building.OccupiedZoneRadius;
         float maximumSpawnDistance = minimumSpawnDistance + _spawnOffsetRadius;
         float spawnDistance = Random.Range(minimumSpawnDistance, maximumSpawnDistance);
 
@@ -63,18 +78,37 @@ public abstract class UnitSpawner : MonoBehaviour
         float maximumSpawnAngle = Mathf.PI * 2;
         float spawnAngle = Random.Range(minimumSpawnAngle, maximumSpawnAngle);
 
-        Vector3 spawnPosition = Owner.transform.position + new Vector3(Mathf.Cos(spawnAngle), 0, Mathf.Sin(spawnAngle)) * spawnDistance;
+        Vector3 spawnPosition = _owner.transform.position + new Vector3(Mathf.Cos(spawnAngle), 0, Mathf.Sin(spawnAngle)) * spawnDistance;
 
         return spawnPosition;
     }
 
-    private void OnFlagStatusChanged()
+    private void SpawnFlag()
     {
-        StartCoroutine(SpawnUnit());
+        StartCoroutine(SpawnUnits());
     }
 
-    private void OnResourcesChanged()
+    private void SpawnRes()
     {
-        StartCoroutine(SpawnUnit());
+        StartCoroutine(SpawnUnits());
+    }
+
+    private IEnumerator SpawnUnits()
+    {
+        if (_isSpawning) yield break;
+        _isSpawning = true;
+
+        if (_owner.FlagSetter.Flag == null)
+        {
+            while (_owner.Storage.Count >= _unitCost)
+            {
+                _owner.Storage.PayResource(_unitCost);
+                _pool.Get();
+
+                yield return _spawnDelay;
+            }
+        }
+
+        _isSpawning = false;
     }
 }

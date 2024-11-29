@@ -9,10 +9,17 @@
     {
         base.InitializeExecutor(unit);
 
-        Commands.Enqueue(new MoveToTargetCommand(Unit, _resource.transform));
-        Commands.Enqueue(new TakeResourceCommand(Unit, _resource, _owner));
-        Commands.Enqueue(new MoveToPointCommand(Unit, _storage.transform.position, _owner.Building));
-        Commands.Enqueue(new DeliverResourceCommand(Unit, _storage, _resource, _collectingResourcesRegister));
+        if (_resource != null)
+        {
+            Commands.Enqueue(new MoveToTargetCommand(Unit, _resource.transform));
+            Commands.Enqueue(new TakeResourceCommand(Unit, _resource, _owner));
+            Commands.Enqueue(new MoveToPointCommand(Unit, _storage.transform.position, _owner.Building));
+            Commands.Enqueue(new DeliverResourceCommand(Unit, _storage, _resource, _collectingResourcesRegister));
+        }
+        else
+        {
+            Unit = null;
+        }
     }
 
     public CollectResourceTask(Resource resource, Base owner)

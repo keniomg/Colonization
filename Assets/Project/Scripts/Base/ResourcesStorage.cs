@@ -9,7 +9,7 @@ public class ResourcesStorage : MonoBehaviour
     [SerializeField] private Transform _storagePlace;
 
     private ResourcesEventInvoker _resourceEventInvoker;
-    private Dictionary<int, Resource> _resources = new Dictionary<int, Resource>();
+    private Dictionary<int, Resource> _resources = new();
 
     public event Action ValueChanged;
 

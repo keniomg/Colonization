@@ -10,12 +10,9 @@ public class ColonizeTask : Task
     {
         base.InitializeExecutor(unit);
 
-        if (unit.TryGetComponent(out Colonizator colonizator))
-        {
-            _buildingEventInvoker.InvokeBuldingPlanned();
-            Commands.Enqueue(new MoveToPointCommand(Unit, _flagPosition, _owner.Building));
-            Commands.Enqueue(new ColonizeCommand(colonizator, _owner, _flagPosition, _buildingEventInvoker));
-        }
+        _buildingEventInvoker.InvokeBuldingPlanned();
+        Commands.Enqueue(new MoveToPointCommand(Unit, _flagPosition, _owner.Building));
+        Commands.Enqueue(new ColonizeCommand(unit, _owner, _flagPosition, _buildingEventInvoker));
     }
 
     public ColonizeTask(Vector3 position, Base owner, BuildingEventInvoker buildingEventInvoker)

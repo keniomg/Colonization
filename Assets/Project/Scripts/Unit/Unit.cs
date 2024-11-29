@@ -3,7 +3,8 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(UnitMover), typeof(CapsuleCollider), typeof(UnitAnimationStatus))]
 [RequireComponent(typeof(UnitAnimator), typeof(Animator), typeof(NavMeshAgent))]
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(UnitResourcesHolder), typeof(UnitColonizer))]
+[RequireComponent(typeof(UnitCommandController))]
 public class Unit : MonoBehaviour
 {
     private Animator _animator;
@@ -24,7 +25,7 @@ public class Unit : MonoBehaviour
         InitializeComponents();
     }
 
-    protected virtual void GetComponents()
+    private void GetComponents()
     {
         AnimationEventInvoker = ScriptableObject.CreateInstance<UnitAnimationEventInvoker>();
 
@@ -35,6 +36,7 @@ public class Unit : MonoBehaviour
         _navMeshAgent = GetComponent<NavMeshAgent>();
         Colonizer = GetComponent<UnitColonizer>();
         ResourcesHolder = GetComponent<UnitResourcesHolder>();
+        UnitCommandController = GetComponent<UnitCommandController>();
     }
 
     private void InitializeComponents()

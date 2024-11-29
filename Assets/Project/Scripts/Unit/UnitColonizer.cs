@@ -3,18 +3,21 @@ using UnityEngine;
 
 public class UnitColonizer : MonoBehaviour
 {
-    public event Action<Colonizator> Colonized;
+    public event Action Colonized;
 
     public bool Colonize(Vector3 position, Base owner, BuildingEventInvoker buildingEventInvoker)
     {
-        Instantiate(owner, position, Quaternion.identity);
+        Base newOwner = Instantiate(owner, position, Quaternion.identity);
         buildingEventInvoker.InvokeBuildingStarted();
 
-        if (TryGetComponent(out Colonizator colonizator))
+        if (TryGetComponent(out Unit unit))
         {
-            Colonized.Invoke(colonizator);
+            Colonized.Invoke();
+            unit.UnitCommandController.Initialize(newOwner.UnitTaskEventInvoker);
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

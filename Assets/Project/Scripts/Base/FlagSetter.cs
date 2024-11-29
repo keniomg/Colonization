@@ -13,7 +13,7 @@ public class FlagSetter : MonoBehaviour
     private float _requiredArea;
     private Flag _flag;
     private BuildingEventInvoker _buildingEventInvoker;
-    MeshRenderer[] _flagMeshRenderers;
+    private MeshRenderer[] _flagMeshRenderers;
 
     public event Action FlagStatusChanged;
 

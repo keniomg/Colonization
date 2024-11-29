@@ -12,10 +12,10 @@ public class ColonizeCommand : ICommand
     public bool IsComplete => _isComplete;
     public bool IsInterrupted => _isInterrupted;
 
-    public ColonizeCommand(Colonizator colonizator, Base owner, Vector3 colonizePoint, BuildingEventInvoker buildingEventInvoker)
+    public ColonizeCommand(Unit unit, Base owner, Vector3 colonizePoint, BuildingEventInvoker buildingEventInvoker)
     {
         _buildingEventInvoker = buildingEventInvoker;
-        _unitColonizer = colonizator.Colonizer;
+        _unitColonizer = unit.Colonizer;
         _owner = owner;
         _colonizePoint = colonizePoint;
     }

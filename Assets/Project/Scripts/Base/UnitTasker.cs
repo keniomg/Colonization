@@ -3,46 +3,58 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class UnitTasker : MonoBehaviour
+public class UnitTasker : MonoBehaviour
 {
-    [SerializeField] private float _unitSearchingDelay;
-
-    protected UnitTaskEventInvoker UnitTaskEventInvoker;
-    protected List<Task> Tasks = new List<Task>();
-    protected Base Owner;
-
-    private Dictionary<int, Unit> _freeUnits = new Dictionary<int, Unit>();
+    private float _unitSearchingDelay;
+    private int _colonizationTaskCost;
+    private UnitTaskEventInvoker _unitTaskEventInvoker;
+    private List<Task> _collectTasks = new();
+    private List<Task> _colonizationTasks = new();
+    private Base _owner;
+    private Dictionary<int, Unit> _freeUnits = new();
     private WaitForSeconds _searchUnitDelay;
     private Coroutine _appointExecutors;
     private FlagSetter _flagSetter;
     private CollectingResourcesRegister _collectingResourcesRegister;
     private ResourcesScanner _resourcesScanner;
+    private int _minimumUnitsCountForColonization;
 
     protected virtual void OnDisable()
     {
-        UnitTaskEventInvoker.UnitTaskStatusChanged -= HandleUnitStatusChanged;
+        _unitTaskEventInvoker.UnitTaskStatusChanged -= HandleUnitStatusChanged;
         _resourcesScanner.FoundAvailableResource -= HandleAvailableResource;
+        _flagSetter.FlagStatusChanged += OnFlagStatusChanged;
     }
 
-    public virtual void Initialize(Base owner) 
+    public virtual void Initialize(Base owner)
     {
+        _minimumUnitsCountForColonization = 1;
+        _unitSearchingDelay = 1;
+        _colonizationTaskCost = 5;
         _searchUnitDelay = new(_unitSearchingDelay);
         _appointExecutors = null;
-        Owner = owner;
-        _flagSetter = Owner.FlagSetter;
-        UnitTaskEventInvoker = Owner.UnitTaskEventInvoker;
-        UnitTaskEventInvoker.UnitTaskStatusChanged += HandleUnitStatusChanged;
-        _resourcesScanner = Owner.ResourcesScanner;
+        _owner = owner;
+        _flagSetter = _owner.FlagSetter;
+        _flagSetter.FlagStatusChanged += OnFlagStatusChanged;
+        _unitTaskEventInvoker = _owner.UnitTaskEventInvoker;
+        _unitTaskEventInvoker.UnitTaskStatusChanged += HandleUnitStatusChanged;
+        _resourcesScanner = _owner.ResourcesScanner;
         _resourcesScanner.FoundAvailableResource += HandleAvailableResource;
-        _collectingResourcesRegister = Owner.CollectingResourcesRegister;
-    }
-
-    protected void DelegateTasks()
-    {
+        _collectingResourcesRegister = _owner.CollectingResourcesRegister;
         _appointExecutors ??= StartCoroutine(AppointExecutors());
     }
 
-    protected void HandleUnitStatusChanged(Unit unit, UnitTaskStatusTypes statusType)
+    private void OnFlagStatusChanged()
+    {
+        _colonizationTasks.Clear();
+
+        if (_flagSetter.Flag != null)
+        {
+            _colonizationTasks.Add(new ColonizeTask(_flagSetter.Flag.transform.position, _owner, _owner.BuildingEventInvoker));
+        }
+    }
+
+    private void HandleUnitStatusChanged(Unit unit, UnitTaskStatusTypes statusType)
     {
         switch (statusType)
         {
@@ -55,14 +67,14 @@ public abstract class UnitTasker : MonoBehaviour
         }
     }
 
-    protected void GiveTask()
+    private void GiveTask(List<Task> tasks)
     {
-        Task givingTask = GetRandomTask();
+        Task givingTask = tasks[Random.Range(0, tasks.Count)];
         GetFreeUnit().UnitCommandController.AddTask(givingTask);
-        Tasks.Remove(givingTask);
+        tasks.Remove(givingTask);
     }
 
-    protected Unit GetFreeUnit()
+    private Unit GetFreeUnit()
     {
         if (_freeUnits.Count > 0)
         {
@@ -72,17 +84,11 @@ public abstract class UnitTasker : MonoBehaviour
         return null;
     }
 
-    protected Task GetRandomTask()
-    {
-        return Tasks[Random.Range(0, Tasks.Count)];
-    }
-
     private void HandleAvailableResource(int id, Resource resource)
     {
         if (_collectingResourcesRegister.GetResourceCollecting(id) == false)
         {
-            Tasks.Add(new CollectResourceTask(resource, Owner));
-            DelegateTasks();
+            _collectTasks.Add(new CollectResourceTask(resource, _owner));
         }
     }
 
@@ -104,16 +110,33 @@ public abstract class UnitTasker : MonoBehaviour
 
     private IEnumerator AppointExecutors()
     {
-        while (Tasks.Count > 0)
+        while (true)
         {
-            while (_freeUnits.Count == 0)
+            if (_freeUnits.Count == 0)
             {
                 yield return _searchUnitDelay;
             }
+            else
+            {
+                if (_flagSetter.Flag != null && _owner.Storage.Count >= _colonizationTaskCost 
+                    && _owner.UnitSpawner.UnitsCount > _minimumUnitsCountForColonization)
+                {
+                    if (_colonizationTasks.Count > 0)
+                    {
+                        _owner.Storage.PayResource(_colonizationTaskCost);
+                        GiveTask(_colonizationTasks);
+                    }
+                }
+                else
+                {
+                    if (_collectTasks.Count > 0)
+                    {
+                        GiveTask(_collectTasks);
+                    }
+                }
+            }
 
-            GiveTask();
+            yield return null;
         }
-
-        _appointExecutors = null;
     }
 }

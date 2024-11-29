@@ -149,7 +149,7 @@ MonoBehaviour:
   - {fileID: 5692314251095795723}
   _poolCapacity: 10
   _poolMaximumSize: 15
-  _resourcesSpawnDelay: 2
+  _resourcesSpawnDelay: 0.5
 --- !u!1 &6404337835223772791
 GameObject:
   m_ObjectHideFlags: 0

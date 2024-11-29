@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class UnitCommandController : MonoBehaviour
+public class UnitCommandController : MonoBehaviour
 {
-    protected Base Owner;
-    protected UnitTaskEventInvoker UnitTaskEventInvoker;
-
+    private UnitTaskEventInvoker _unitTaskEventInvoker;
     private Unit _selfUnit;
     private Queue<ICommand> _commands = new Queue<ICommand>();
     private ICommand _currentCommand;
@@ -16,10 +14,9 @@ public abstract class UnitCommandController : MonoBehaviour
         _selfUnit = TryGetComponent(out Unit unit) ? unit : null;
     }
 
-    public void Initialize(Base owner)
+    public void Initialize(UnitTaskEventInvoker unitTaskEventInvoker)
     {
-        Owner = owner;
-        UnitTaskEventInvoker = Owner.UnitTaskEventInvoker;
+        _unitTaskEventInvoker = unitTaskEventInvoker;
         StartCoroutine(HandleTask());
     }
 
@@ -37,7 +34,7 @@ public abstract class UnitCommandController : MonoBehaviour
             AddCommand(command);
         }
 
-        UnitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Busy);
+        _unitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Busy);
         StartCoroutine(HandleTask());
     }
 
@@ -71,6 +68,6 @@ public abstract class UnitCommandController : MonoBehaviour
             }
         }
 
-        UnitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Free);
+        _unitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Free);
     }
 }
