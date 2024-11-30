@@ -14,12 +14,18 @@ public class FlagSetter : MonoBehaviour
     private Flag _flag;
     private BuildingEventInvoker _buildingEventInvoker;
     private MeshRenderer[] _flagMeshRenderers;
+    private Camera _mainCamera;
 
     public event Action FlagStatusChanged;
 
     public Flag Flag { get; private set; }
 
-    private void OnDisable()
+    private void Awake()
+    {
+        _mainCamera = Camera.main;
+    }
+
+    private void OnDestroy()
     {
         _choosable.Choosed -= OnChoosed;
         _flag.CollidedWithPreview -= UnsetFlag;
@@ -40,9 +46,9 @@ public class FlagSetter : MonoBehaviour
         _buildingEventInvoker.BuildingPlanned += UnsetFlag;
     }
 
-    public void OnRightMouseClicked()
+    public void OnFlagSetted()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Ray ray = _mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
@@ -61,12 +67,12 @@ public class FlagSetter : MonoBehaviour
     {
         if (isChosen)
         {
-            _inputEventInvoker.RightMouseClicked += OnRightMouseClicked;
+            _inputEventInvoker.FlagSetted += OnFlagSetted;
             SetFlagVisibility(true);
         }
         else
         {
-            _inputEventInvoker.RightMouseClicked -= OnRightMouseClicked;
+            _inputEventInvoker.FlagSetted -= OnFlagSetted;
             SetFlagVisibility(false);
         }
     }

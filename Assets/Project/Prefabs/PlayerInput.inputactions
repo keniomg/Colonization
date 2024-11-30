@@ -6,7 +6,7 @@
             "id": "c9349f14-044d-4889-92aa-de7b6f428b54",
             "actions": [
                 {
-                    "name": "LeftMouseClicked",
+                    "name": "Choosed",
                     "type": "Button",
                     "id": "33701acd-a2a8-4ef0-a0d9-30bbd2c0078b",
                     "expectedControlType": "Button",
@@ -15,7 +15,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "RightMouseClicked",
+                    "name": "FlagSetted",
                     "type": "Button",
                     "id": "a45182fd-edb9-4bbc-ba8b-2565c41e234c",
                     "expectedControlType": "Button",
@@ -32,7 +32,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse",
-                    "action": "LeftMouseClicked",
+                    "action": "Choosed",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -43,7 +43,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse",
-                    "action": "RightMouseClicked",
+                    "action": "FlagSetted",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

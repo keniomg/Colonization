@@ -5,19 +5,19 @@ public class InputHandler : MonoBehaviour
 {
     [SerializeField] private InputEventInvoker _invoker;
 
-    public void OnLeftMouseClicked(InputAction.CallbackContext context)
+    public void OnChoosed(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            _invoker.InvokeLeftMouseClicked();
+            _invoker.InvokeChoosed();
         }
     }
 
-    public void OnRightMouseClicked(InputAction.CallbackContext context)
+    public void OnFlagSetted(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            _invoker.InvokeRightMouseClicked();
+            _invoker.InvokeFlagSetted();
         }
     }
 }

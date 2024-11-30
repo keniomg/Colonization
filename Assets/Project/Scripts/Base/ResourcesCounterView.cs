@@ -8,7 +8,7 @@ public class ResourcesCounterView : MonoBehaviour
 
     private ResourcesStorage _resourcesStorage;
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         _resourcesStorage.ValueChanged -= OnValueChanged;
     }

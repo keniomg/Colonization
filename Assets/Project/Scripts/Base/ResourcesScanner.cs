@@ -10,7 +10,7 @@ public class ResourcesScanner : MonoBehaviour
 
     public event Action<int, Resource> FoundAvailableResource;
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         _map.ResourceAppeared -= RegisterResource;
         _map.ResourceDisappeared -= UnregisterResource;

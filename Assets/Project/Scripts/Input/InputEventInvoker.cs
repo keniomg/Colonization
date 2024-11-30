@@ -4,16 +4,16 @@ using UnityEngine;
 [CreateAssetMenu]
 public class InputEventInvoker : ScriptableObject
 {
-    public event Action LeftMouseClicked;
-    public event Action RightMouseClicked;
+    public event Action Choosed;
+    public event Action FlagSetted;
 
-    public void InvokeLeftMouseClicked()
+    public void InvokeChoosed()
     {
-        LeftMouseClicked?.Invoke();
+        Choosed?.Invoke();
     }
 
-    public void InvokeRightMouseClicked()
+    public void InvokeFlagSetted()
     {
-        RightMouseClicked?.Invoke();
+        FlagSetted?.Invoke();
     }
 }

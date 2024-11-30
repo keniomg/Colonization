@@ -7,20 +7,26 @@ public class Chooser : MonoBehaviour
     [SerializeField] private InputEventInvoker _inputEventInvoker;
 
     private Choosable _chosen;
+    private Camera _mainCamera;
+
+    private void Awake()
+    {
+        _mainCamera = Camera.main;
+    }
 
     private void OnEnable()
     {
-        _inputEventInvoker.LeftMouseClicked += OnLeftMouseClicked;
+        _inputEventInvoker.Choosed += OnChoosed;
     }
 
     private void OnDisable()
     {
-        _inputEventInvoker.LeftMouseClicked -= OnLeftMouseClicked;
+        _inputEventInvoker.Choosed -= OnChoosed;
     }
 
-    public void OnLeftMouseClicked()
+    public void OnChoosed()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Ray ray = _mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {

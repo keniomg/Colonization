@@ -15,24 +15,18 @@ public class Choosable : MonoBehaviour
     public void ChangeChosenStatus(bool isChosen)
     {
         Choosed?.Invoke(isChosen);
+        Highlight(isChosen);
+    }
 
-        if (isChosen)
+    private void Highlight(bool isPlay)
+    {
+        if (isPlay)
         {
-            Highlight();
+            _highlight.Play();
         }
         else
         {
-            Unhighlight();
+            _highlight.Stop();
         }
-    }
-
-    private void Highlight()
-    {
-        _highlight.Play();
-    }
-
-    private void Unhighlight()
-    {
-        _highlight.Stop();
     }
 }

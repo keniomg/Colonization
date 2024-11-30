@@ -6,12 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(UnitTasker), typeof(UnitSpawner))]
 public class Base : MonoBehaviour
 {
-    [field: SerializeField] public ResourcesEventInvoker ResourcesEventInvoker { get; private set; }
-
     private BuildingPreviewer _buildingPreviewer;
     private UnitTasker _unitTasker;
     private Choosable _choosable;
     private ResourcesCounterView _resourcesCounterView;
+
+    [field: SerializeField] public ResourcesEventInvoker ResourcesEventInvoker { get; private set; }
 
     public UnitSpawner UnitSpawner { get; private set; }
     public Building Building { get; private set; }

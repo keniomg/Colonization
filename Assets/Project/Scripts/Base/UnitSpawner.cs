@@ -95,7 +95,11 @@ public class UnitSpawner : MonoBehaviour
 
     private IEnumerator SpawnUnits()
     {
-        if (_isSpawning) yield break;
+        if (_isSpawning == true)
+        {
+            yield break;
+        }
+
         _isSpawning = true;
 
         if (_owner.FlagSetter.Flag == null)

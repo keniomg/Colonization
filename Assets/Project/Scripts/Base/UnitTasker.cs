@@ -19,11 +19,11 @@ public class UnitTasker : MonoBehaviour
     private ResourcesScanner _resourcesScanner;
     private int _minimumUnitsCountForColonization;
 
-    protected virtual void OnDisable()
+    protected virtual void OnDestroy()
     {
         _unitTaskEventInvoker.UnitTaskStatusChanged -= HandleUnitStatusChanged;
         _resourcesScanner.FoundAvailableResource -= HandleAvailableResource;
-        _flagSetter.FlagStatusChanged += OnFlagStatusChanged;
+        _flagSetter.FlagStatusChanged -= OnFlagStatusChanged;
     }
 
     public virtual void Initialize(Base owner)
