@@ -2,7 +2,7 @@
 {
     private Resource _resource;
     private ResourcesStorage _storage;
-    private CollectingResourcesRegister _collectingResourcesRegister;
+    private ResourcesScanner _resourceScanner;
     private Base _owner;
 
     public override void InitializeExecutor(Unit unit)
@@ -14,7 +14,7 @@
             Commands.Enqueue(new MoveToTargetCommand(Unit, _resource.transform));
             Commands.Enqueue(new TakeResourceCommand(Unit, _resource, _owner));
             Commands.Enqueue(new MoveToPointCommand(Unit, _storage.transform.position, _owner.Building));
-            Commands.Enqueue(new DeliverResourceCommand(Unit, _storage, _resource, _collectingResourcesRegister));
+            Commands.Enqueue(new DeliverResourceCommand(Unit, _resource, _owner));
         }
         else
         {
@@ -26,8 +26,8 @@
     {
         _owner = owner;
         _storage = owner.Storage;
-        _collectingResourcesRegister = owner.CollectingResourcesRegister;
+        _resourceScanner = owner.ResourcesScanner;
         _resource = resource;
-        _collectingResourcesRegister.RegisterCollectingResource(_resource.gameObject.GetInstanceID(), _resource);
+        owner.ResourcesEventInvoker.InvokeResourceChoosed(resource);
     }
 }

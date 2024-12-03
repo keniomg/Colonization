@@ -13,9 +13,7 @@ public class UnitTasker : MonoBehaviour
     private Base _owner;
     private Dictionary<int, Unit> _freeUnits = new();
     private WaitForSeconds _searchUnitDelay;
-    private Coroutine _appointExecutors;
     private FlagSetter _flagSetter;
-    private CollectingResourcesRegister _collectingResourcesRegister;
     private ResourcesScanner _resourcesScanner;
     private int _minimumUnitsCountForColonization;
 
@@ -32,7 +30,6 @@ public class UnitTasker : MonoBehaviour
         _unitSearchingDelay = 1;
         _colonizationTaskCost = 5;
         _searchUnitDelay = new(_unitSearchingDelay);
-        _appointExecutors = null;
         _owner = owner;
         _flagSetter = _owner.FlagSetter;
         _flagSetter.FlagStatusChanged += OnFlagStatusChanged;
@@ -40,8 +37,7 @@ public class UnitTasker : MonoBehaviour
         _unitTaskEventInvoker.UnitTaskStatusChanged += HandleUnitStatusChanged;
         _resourcesScanner = _owner.ResourcesScanner;
         _resourcesScanner.FoundAvailableResource += HandleAvailableResource;
-        _collectingResourcesRegister = _owner.CollectingResourcesRegister;
-        _appointExecutors ??= StartCoroutine(AppointExecutors());
+        StartCoroutine(AppointExecutors());
     }
 
     private void OnFlagStatusChanged()
@@ -86,7 +82,7 @@ public class UnitTasker : MonoBehaviour
 
     private void HandleAvailableResource(int id, Resource resource)
     {
-        if (_collectingResourcesRegister.GetResourceCollecting(id) == false)
+        if (_resourcesScanner.GetResourceCollectingStatus(resource) == false)
         {
             _collectTasks.Add(new CollectResourceTask(resource, _owner));
         }

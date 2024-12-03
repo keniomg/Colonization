@@ -10,11 +10,19 @@ public class BuildingPreview : MonoBehaviour
         SetTransparency();
     }
 
-    public void SetPreviewVisibility(bool isVisible)
+    public void SetPreviewVisible()
     {
         foreach (MeshRenderer meshRenderer in _meshRenderers)
         {
-            meshRenderer.enabled = isVisible;
+            meshRenderer.enabled = true;
+        }
+    }
+
+    public void SetPreviewInvisible()
+    {
+        foreach (MeshRenderer meshRenderer in _meshRenderers)
+        {
+            meshRenderer.enabled = false;
         }
     }
 

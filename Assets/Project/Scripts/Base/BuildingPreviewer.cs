@@ -13,6 +13,7 @@ public class BuildingPreviewer : MonoBehaviour
     private void OnDestroy()
     {
         _choosable.Choosed -= OnChoosed;
+        _choosable.Unchoosed -= OnUnchoosed;
         _buildingEventInvoker.BuildingPlanned -= OnBuildingPlanned;
         _buildingEventInvoker.BuildingStarted -= OnBuildingStarted;
     }
@@ -25,6 +26,7 @@ public class BuildingPreviewer : MonoBehaviour
         _buildingPreview.gameObject.SetActive(false);
         _choosable = choosable;
         _choosable.Choosed += OnChoosed;
+        _choosable.Unchoosed += OnUnchoosed;
         _buildingEventInvoker = buildingEventInvoker;
         _buildingEventInvoker.BuildingPlanned += OnBuildingPlanned;
         _buildingEventInvoker.BuildingStarted += OnBuildingStarted;
@@ -41,9 +43,14 @@ public class BuildingPreviewer : MonoBehaviour
         _buildingPreview.gameObject.SetActive(false);
     }
 
-    private void OnChoosed(bool isChosen)
+    private void OnChoosed()
     {
-        _buildingPreview.SetPreviewVisibility(isChosen);
+        _buildingPreview.SetPreviewVisible();
+    }
+
+    private void OnUnchoosed()
+    {
+        _buildingPreview.SetPreviewInvisible();
     }
 
     private void OnFlagStatusChanged()

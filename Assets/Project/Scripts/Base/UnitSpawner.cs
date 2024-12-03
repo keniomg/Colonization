@@ -66,6 +66,8 @@ public class UnitSpawner : MonoBehaviour
         {
             _pool.Get();
         }
+
+        _startCount = 0;
     }
 
     private Vector3 GetSpawnPosition()

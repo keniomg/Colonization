@@ -5,28 +5,33 @@ public class Choosable : MonoBehaviour
 {
     [SerializeField] private ParticleSystem _highlight;
 
-    public event Action<bool> Choosed;
+    public event Action Choosed;
+    public event Action Unchoosed;
 
     private void Awake()
     {
         _highlight.Stop();
     }
 
-    public void ChangeChosenStatus(bool isChosen)
+    public void Choose()
     {
-        Choosed?.Invoke(isChosen);
-        Highlight(isChosen);
+        Choosed?.Invoke();
+        Highlight();
     }
 
-    private void Highlight(bool isPlay)
+    public void Unchoose()
     {
-        if (isPlay)
-        {
-            _highlight.Play();
-        }
-        else
-        {
-            _highlight.Stop();
-        }
+        Unchoosed?.Invoke();
+        Unhiglight();
+    }
+
+    private void Highlight()
+    {
+        _highlight.Play();
+    }
+
+    private void Unhiglight()
+    {
+        _highlight.Stop();
     }
 }

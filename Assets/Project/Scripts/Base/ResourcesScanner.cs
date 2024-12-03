@@ -1,49 +1,122 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections;
 
 public class ResourcesScanner : MonoBehaviour
 {
-    private Map _map;
+    [SerializeField] private float _searchRadius;
+    [SerializeField] private LayerMask _resourceLayer;
+    [SerializeField] private float _delay;
+
+    private WaitForSeconds _scanRepeatDelay;
     private ResourcesEventInvoker _resourcesEventInvoker;
-    private Dictionary<int, Resource> _resourcesOnMap = new Dictionary<int, Resource>();
+    private Dictionary<int, Resource> _availableResources = new Dictionary<int, Resource>();
+    private Dictionary<int, Resource> _collectingResources = new Dictionary<int, Resource>();
 
     public event Action<int, Resource> FoundAvailableResource;
 
     private void OnDestroy()
     {
-        _map.ResourceAppeared -= RegisterResource;
-        _map.ResourceDisappeared -= UnregisterResource;
+        _resourcesEventInvoker.ResourceCollected -= UnregisterAvailableResource;
+        _resourcesEventInvoker.ResourceChoosed -= RegisterCollectingResource;
+        _resourcesEventInvoker.ResourceCollected -= UnregisterCollectingResource;
     }
 
-    public void Initialize(ResourcesEventInvoker resourcesEventInvoker, Map map)
+    public void Initialize(ResourcesEventInvoker resourcesEventInvoker)
     {
-        _map = map;
-        _map.ResourceAppeared += RegisterResource;
-        _map.ResourceDisappeared += UnregisterResource;
+        _scanRepeatDelay = new(_delay);
         _resourcesEventInvoker = resourcesEventInvoker;
-        _resourcesEventInvoker.ResourceCollected += UnregisterResource;
+        _resourcesEventInvoker.ResourceCollected += UnregisterAvailableResource;
+        _resourcesEventInvoker.ResourceChoosed += RegisterCollectingResource;
+        _resourcesEventInvoker.ResourceCollected += UnregisterCollectingResource;
+        StartCoroutine(Scanning());
     }
 
-    public bool GetResourceOnMap(Resource resource)
+    public bool GetResourceAvailableStatus(Resource resource)
     {
-        return _resourcesOnMap.ContainsKey(resource.gameObject.GetInstanceID());
+        return _availableResources.ContainsKey(resource.gameObject.GetInstanceID());
     }
 
-    private void RegisterResource(int id, Resource resource)
+    public bool GetResourceCollectingStatus(Resource resource)
     {
-        if (_resourcesOnMap.ContainsKey(id) == false)
+        return _collectingResources.ContainsKey(resource.gameObject.GetInstanceID());
+    }
+
+    private IEnumerator Scanning()
+    {
+        while (true)
         {
-            _resourcesOnMap.Add(id, resource);
-            FoundAvailableResource?.Invoke(id, resource);
+            SearchResources();
+
+            yield return _scanRepeatDelay;
         }
     }
 
-    private void UnregisterResource(int id, Resource resource)
+    private void SearchResources()
     {
-        if (_resourcesOnMap.ContainsKey(id))
+        Collider[] resources = Physics.OverlapSphere(transform.position, _searchRadius, _resourceLayer);
+
+        foreach (Collider collider in resources)
         {
-            _resourcesOnMap.Remove(id);
+            if (collider.TryGetComponent(out Resource resource))
+            {
+                if (GetResourceInStorageStatus(collider))
+                {
+                    continue;
+                }
+
+                RegisterAvailableResource(resource);
+            }
+        }
+    }
+
+    private bool GetResourceInStorageStatus(Collider resourceCollider)
+    {
+        float checkRadius = 0.1f;
+        Collider[] colliders = Physics.OverlapSphere(resourceCollider.transform.position, checkRadius);
+
+        foreach (Collider collider in colliders)
+        {
+            if (collider.TryGetComponent(out ResourcesStorage resourcesStorage))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void RegisterAvailableResource(Resource resource)
+    {
+        if (_availableResources.ContainsKey(resource.gameObject.GetInstanceID()) == false)
+        {
+            _availableResources.Add(resource.gameObject.GetInstanceID(), resource);
+            FoundAvailableResource?.Invoke(resource.gameObject.GetInstanceID(), resource);
+        }
+    }
+
+    private void UnregisterAvailableResource(Resource resource)
+    {
+        if (_availableResources.ContainsKey(resource.gameObject.GetInstanceID()))
+        {
+            _availableResources.Remove(resource.gameObject.GetInstanceID());
+        }
+    }
+
+    private void RegisterCollectingResource(Resource resource)
+    {
+        if (_collectingResources.ContainsKey(resource.gameObject.GetInstanceID()) == false)
+        {
+            _collectingResources.Add(resource.gameObject.GetInstanceID(), resource);
+        }
+    }
+
+    private void UnregisterCollectingResource(Resource resource)
+    {
+        if (_collectingResources.ContainsKey(resource.gameObject.GetInstanceID()))
+        {
+            _collectingResources.Remove(resource.gameObject.GetInstanceID());
         }
     }
 }

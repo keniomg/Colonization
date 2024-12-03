@@ -4,7 +4,7 @@
     private Resource _resource;
     private ResourcesStorage _storage;
     private UnitAnimationEventInvoker _unitAnimationEventInvoker;
-    private CollectingResourcesRegister _collectingResourcesRegister;
+    private ResourcesEventInvoker _resourceEventInvoker;
 
     private bool _isComplete;
     private bool _isInterrupted;
@@ -12,15 +12,15 @@
     public bool IsComplete => _isComplete;
     public bool IsInterrupted => _isInterrupted;
 
-    public DeliverResourceCommand(Unit unit, ResourcesStorage storage, Resource resource, CollectingResourcesRegister collectingResourcesRegister)
+    public DeliverResourceCommand(Unit unit, Resource resource, Base owner)
     {
         if (unit.TryGetComponent(out UnitResourcesHolder unitResourcesHolder))
         {
             _resourcesHolder = unitResourcesHolder;
             _unitAnimationEventInvoker = unit.AnimationEventInvoker;
-            _storage = storage;
+            _storage = owner.Storage;
+            _resourceEventInvoker = owner.ResourcesEventInvoker;
             _resource = resource;
-            _collectingResourcesRegister = collectingResourcesRegister;
         }
     }
 
@@ -29,7 +29,7 @@
         if (_resourcesHolder.GiveResource(_resource, _storage))
         {
             _isComplete = true;
-            _collectingResourcesRegister.UnregisterCollectingResource(_resource.gameObject.GetInstanceID(), _resource);
+            _resourceEventInvoker.InvokeResourceCollected(_resource);
         }
         else
         {

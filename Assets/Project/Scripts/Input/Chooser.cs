@@ -46,14 +46,14 @@ public class Chooser : MonoBehaviour
         Unchoose();
 
         _chosen = choosable;
-        _chosen.ChangeChosenStatus(true);
+        _chosen.Choose();
     }
 
     private void Unchoose()
     {
         if (_chosen != null)
         {
-            _chosen.ChangeChosenStatus(false);
+            _chosen.Unchoose();
             _chosen = null;
         }
     }

@@ -71,7 +71,11 @@ public class ResourcesStorage : MonoBehaviour
         {
             _resources.Remove(id);
             ValueChanged.Invoke();
-            _resourceEventInvoker.InvokeResourceReturn(resource);
+
+            if (resource != null)
+            {
+                _resourceEventInvoker.InvokeResourceReturn(resource);
+            }
         }
     }
 

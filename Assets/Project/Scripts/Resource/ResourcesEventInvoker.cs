@@ -5,15 +5,21 @@ using UnityEngine;
 public class ResourcesEventInvoker : ScriptableObject
 {
     public event Action<Resource> ResourceReturned;
-    public event Action<int, Resource> ResourceCollected;
+    public event Action<Resource> ResourceCollected;
+    public event Action<Resource> ResourceChoosed;
 
     public void InvokeResourceReturn(Resource resource)
     {
         ResourceReturned?.Invoke(resource);
     }
 
-    public void InvokeResourceCollected(int id, Resource resource)
+    public void InvokeResourceCollected(Resource resource)
     {
-        ResourceCollected?.Invoke(id, resource);
+        ResourceCollected?.Invoke(resource);
+    }
+
+    public void InvokeResourceChoosed(Resource resource)
+    {
+        ResourceChoosed?.Invoke(resource);
     }
 }
