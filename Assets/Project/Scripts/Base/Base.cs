@@ -12,6 +12,7 @@ public class Base : MonoBehaviour
 
     [field: SerializeField] public ResourcesEventInvoker ResourcesEventInvoker { get; private set; }
     [field: SerializeField] public ResourcesScanner ResourcesScanner { get; private set; }
+    [field: SerializeField] public GeneralResourcesRegister GeneralResourcesRegister {get; private set; }
 
     public UnitSpawner UnitSpawner { get; private set; }
     public Building Building { get; private set; }

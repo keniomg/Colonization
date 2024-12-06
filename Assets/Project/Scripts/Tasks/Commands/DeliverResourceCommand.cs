@@ -29,7 +29,7 @@
         if (_resourcesHolder.GiveResource(_resource, _storage))
         {
             _isComplete = true;
-            _resourceEventInvoker.InvokeResourceCollected(_resource);
+            _resourceEventInvoker.InvokeResourceTaked(_resource);
         }
         else
         {

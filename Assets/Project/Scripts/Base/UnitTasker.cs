@@ -6,37 +6,41 @@ using UnityEngine;
 public class UnitTasker : MonoBehaviour
 {
     private float _unitSearchingDelay;
-    private int _colonizationTaskCost;
-    private UnitTaskEventInvoker _unitTaskEventInvoker;
-    private List<Task> _collectTasks = new();
-    private List<Task> _colonizationTasks = new();
-    private Base _owner;
-    private Dictionary<int, Unit> _freeUnits = new();
     private WaitForSeconds _searchUnitDelay;
+    private Dictionary<int, Unit> _freeUnits = new();
+    private UnitTaskEventInvoker _unitTaskEventInvoker;
+    private int _colonizationTaskCost;
+    private int _minimumUnitsCountForColonization;
+    private List<Task> _colonizationTasks = new();
+    private List<Task> _collectTasks = new();
+    private Base _owner;
     private FlagSetter _flagSetter;
     private ResourcesScanner _resourcesScanner;
-    private int _minimumUnitsCountForColonization;
+    private GeneralResourcesRegister _generalResourcesRegister;
 
     protected virtual void OnDestroy()
     {
         _unitTaskEventInvoker.UnitTaskStatusChanged -= HandleUnitStatusChanged;
-        _resourcesScanner.FoundAvailableResource -= HandleAvailableResource;
+        _resourcesScanner.FoundResource -= HandleAvailableResource;
         _flagSetter.FlagStatusChanged -= OnFlagStatusChanged;
     }
 
     public virtual void Initialize(Base owner)
     {
         _minimumUnitsCountForColonization = 1;
-        _unitSearchingDelay = 1;
         _colonizationTaskCost = 5;
+        _unitSearchingDelay = 1;
         _searchUnitDelay = new(_unitSearchingDelay);
+
         _owner = owner;
         _flagSetter = _owner.FlagSetter;
-        _flagSetter.FlagStatusChanged += OnFlagStatusChanged;
         _unitTaskEventInvoker = _owner.UnitTaskEventInvoker;
-        _unitTaskEventInvoker.UnitTaskStatusChanged += HandleUnitStatusChanged;
         _resourcesScanner = _owner.ResourcesScanner;
-        _resourcesScanner.FoundAvailableResource += HandleAvailableResource;
+
+        _flagSetter.FlagStatusChanged += OnFlagStatusChanged;
+        _unitTaskEventInvoker.UnitTaskStatusChanged += HandleUnitStatusChanged;
+        _resourcesScanner.FoundResource += HandleAvailableResource;
+        _generalResourcesRegister = _owner.GeneralResourcesRegister;
         StartCoroutine(AppointExecutors());
     }
 
@@ -80,9 +84,11 @@ public class UnitTasker : MonoBehaviour
         return null;
     }
 
-    private void HandleAvailableResource(int id, Resource resource)
+    private void HandleAvailableResource(Resource resource)
     {
-        if (_resourcesScanner.GetResourceCollectingStatus(resource) == false)
+        if (_generalResourcesRegister.GetResourceCollectingStatus(gameObject.GetInstanceID(), resource.gameObject.GetInstanceID()) == false
+            && _generalResourcesRegister.GetResourceOnBaseStatus(resource.gameObject.GetInstanceID()) == false
+            && _generalResourcesRegister.GetResourceTakedStatus(resource.gameObject.GetInstanceID()) == false)
         {
             _collectTasks.Add(new CollectResourceTask(resource, _owner));
         }

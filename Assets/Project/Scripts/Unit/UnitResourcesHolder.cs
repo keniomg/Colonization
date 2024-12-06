@@ -20,7 +20,7 @@ public class UnitResourcesHolder : MonoBehaviour
                 _holdingResource = resource;
                 HoldingStatusChanged?.Invoke(true);
                 PlaceHoldingResource(resource);
-                owner.ResourcesEventInvoker.InvokeResourceCollected(resource);
+                owner.ResourcesEventInvoker.InvokeResourceTaked(resource);
 
                 return true;
             }
