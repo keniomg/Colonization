@@ -31,15 +31,31 @@ public class UnitMover : MonoBehaviour
         {
             offset = offset == 0 ? _defaultOffsetDistance : (offset + _defaultOffsetDistance);
 
-            _navMeshAgent.SetDestination(targetTransform.position);
-            _navMeshAgent.stoppingDistance = _defaultOffsetDistance;
+            return MoveToPoint(targetTransform.position, offset);
+            //_navMeshAgent.SetDestination(targetTransform.position);
+            //_navMeshAgent.stoppingDistance = _defaultOffsetDistance;
 
-            if (transform.position.IsEnoughDistance(targetTransform.position, offset))
-            {
-                _navMeshAgent.ResetPath();
+            //if (transform.position.IsEnoughDistance(targetTransform.position, offset))
+            //{
+            //    _navMeshAgent.ResetPath();
 
-                return true;
-            }
+            //    return true;
+            //}
+        }
+
+        return false;
+    }
+
+    public bool MoveToPoint(Vector3 position, float offset)
+    {
+        _navMeshAgent.SetDestination(position);
+        _navMeshAgent.stoppingDistance = _defaultOffsetDistance;
+
+        if (transform.position.IsEnoughDistance(position, offset))
+        {
+            _navMeshAgent.ResetPath();
+
+            return true;
         }
 
         return false;

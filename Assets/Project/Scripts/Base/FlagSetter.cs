@@ -7,7 +7,6 @@ public class FlagSetter : MonoBehaviour
     [SerializeField] private Flag _flagPrefab;
     [SerializeField] private LayerMask _buildingsLayer;
     [SerializeField] private LayerMask _wallsLayer;
-    [SerializeField] private InputEventInvoker _inputEventInvoker;
 
     private Choosable _choosable;
     private float _requiredArea;
@@ -15,6 +14,7 @@ public class FlagSetter : MonoBehaviour
     private BuildingEventInvoker _buildingEventInvoker;
     private MeshRenderer[] _flagMeshRenderers;
     private Camera _mainCamera;
+    private PlayerInputHandler _playerInputHandler;
 
     public event Action FlagStatusChanged;
 
@@ -22,7 +22,18 @@ public class FlagSetter : MonoBehaviour
 
     private void Awake()
     {
+        _playerInputHandler = new();
         _mainCamera = Camera.main;
+    }
+
+    private void OnEnable()
+    {
+        _playerInputHandler.Player.FlagSetted.performed += OnFlagSetted;
+    }
+
+    private void OnDisable()
+    {
+        _playerInputHandler.Player.FlagSetted.performed -= OnFlagSetted;
     }
 
     private void OnDestroy()
@@ -48,11 +59,11 @@ public class FlagSetter : MonoBehaviour
         _buildingEventInvoker.BuildingPlanned += UnsetFlag;
     }
 
-    public void OnFlagSetted()
+    public void OnFlagSetted(InputAction.CallbackContext context)
     {
         Ray ray = _mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Physics.DefaultRaycastLayers))
         {
             if (hit.collider.TryGetComponent(out Flag flag) && flag.gameObject == _flag.gameObject)
             {
@@ -67,13 +78,13 @@ public class FlagSetter : MonoBehaviour
 
     private void OnChoosed()
     {
-        _inputEventInvoker.FlagSetted += OnFlagSetted;
+        _playerInputHandler.Enable();
         SetFlagVisible();
     }
 
     private void OnUnchoosed()
     {
-        _inputEventInvoker.FlagSetted -= OnFlagSetted;
+        _playerInputHandler.Disable();
         SetFlagInvisible();
     }
 

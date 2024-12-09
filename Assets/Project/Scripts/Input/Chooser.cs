@@ -1,30 +1,31 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(PlayerInputHandler))]
 public class Chooser : MonoBehaviour
 {
-    [SerializeField] private InputEventInvoker _inputEventInvoker;
-
     private Choosable _chosen;
     private Camera _mainCamera;
+    private PlayerInputHandler _playerInputHandler;
 
     private void Awake()
     {
         _mainCamera = Camera.main;
+        _playerInputHandler = new();
     }
 
     private void OnEnable()
     {
-        _inputEventInvoker.Choosed += OnChoosed;
+        _playerInputHandler.Enable();
+        _playerInputHandler.Player.Choosed.performed += OnChoosed;
     }
 
     private void OnDisable()
     {
-        _inputEventInvoker.Choosed -= OnChoosed;
+        _playerInputHandler.Disable();
+        _playerInputHandler.Player.Choosed.performed -= OnChoosed;
     }
 
-    public void OnChoosed()
+    public void OnChoosed(InputAction.CallbackContext context)
     {
         Ray ray = _mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 

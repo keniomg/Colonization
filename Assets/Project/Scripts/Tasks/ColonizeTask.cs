@@ -17,7 +17,7 @@ public class ColonizeTask : Task
 
     public ColonizeTask(Transform flagTransform, Base owner, BuildingEventInvoker buildingEventInvoker)
     {
-        _flagTransform = flagTransform;
+        _flagTransform.position = flagTransform.position;
         _owner = owner;
         _buildingEventInvoker = buildingEventInvoker;
     }
