@@ -6,7 +6,7 @@ public class UnitCommandController : MonoBehaviour
 {
     private UnitTaskEventInvoker _unitTaskEventInvoker;
     private Unit _selfUnit;
-    private Queue<ICommand> _commands = new Queue<ICommand>();
+    private Queue<ICommand> _commands = new();
     private ICommand _currentCommand;
 
     private void Awake()

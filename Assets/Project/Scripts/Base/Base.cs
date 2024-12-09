@@ -3,6 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider), typeof(UnitSpawner), typeof(ResourcesStorage))]
 [RequireComponent(typeof(UnitTasker), typeof(ResourcesCounterView), typeof(FlagSetter))]
 [RequireComponent(typeof(Building), typeof(Choosable), typeof(BuildingPreviewer))]
+[RequireComponent(typeof(BuildingEventInvoker), typeof(CollectingResourceRegister), typeof(UnitTaskEventInvoker))]
 public class Base : MonoBehaviour
 {
     private BuildingPreviewer _buildingPreviewer;
@@ -12,8 +13,8 @@ public class Base : MonoBehaviour
 
     [field: SerializeField] public ResourcesEventInvoker ResourcesEventInvoker { get; private set; }
     [field: SerializeField] public ResourcesScanner ResourcesScanner { get; private set; }
-    [field: SerializeField] public GeneralResourcesRegister GeneralResourcesRegister {get; private set; }
 
+    public CollectingResourceRegister CollectingResourceRegister {get; private set; }
     public UnitSpawner UnitSpawner { get; private set; }
     public Building Building { get; private set; }
     public BuildingEventInvoker BuildingEventInvoker { get; private set; }
@@ -29,13 +30,12 @@ public class Base : MonoBehaviour
 
     private void GetComponents()
     {
-        UnitTaskEventInvoker = ScriptableObject.CreateInstance<UnitTaskEventInvoker>();
-        BuildingEventInvoker = ScriptableObject.CreateInstance<BuildingEventInvoker>();
-
+        UnitTaskEventInvoker = GetComponent<UnitTaskEventInvoker>();
+        BuildingEventInvoker = GetComponent<BuildingEventInvoker>();
         Building = GetComponent<Building>();
         FlagSetter = GetComponent<FlagSetter>();
         Storage = GetComponent<ResourcesStorage>();
-
+        CollectingResourceRegister = GetComponent<CollectingResourceRegister>();
         _buildingPreviewer = GetComponent<BuildingPreviewer>();
         _choosable = GetComponent<Choosable>();
         _unitTasker = GetComponent<UnitTasker>();
@@ -45,12 +45,13 @@ public class Base : MonoBehaviour
 
     private void InitializeComponents()
     {
+        ResourcesScanner.Initialize();
         _unitTasker.Initialize(this);
         UnitSpawner.Initialize(this);
-        ResourcesScanner.Initialize(ResourcesEventInvoker);
         Storage.Initialize(ResourcesEventInvoker);
         FlagSetter.Initialize(this, _choosable);
         _buildingPreviewer.Initialize(FlagSetter, BuildingEventInvoker, _choosable);
         _resourcesCounterView.Initialize(Storage);
+        CollectingResourceRegister.Initialize(ResourcesEventInvoker);
     }
 }

@@ -16,7 +16,8 @@ public class UnitTasker : MonoBehaviour
     private Base _owner;
     private FlagSetter _flagSetter;
     private ResourcesScanner _resourcesScanner;
-    private GeneralResourcesRegister _generalResourcesRegister;
+    private CollectingResourceRegister _collectingResourceRegister;
+    private ResourcesEventInvoker _resourcesEventInvoker;
 
     protected virtual void OnDestroy()
     {
@@ -36,11 +37,12 @@ public class UnitTasker : MonoBehaviour
         _flagSetter = _owner.FlagSetter;
         _unitTaskEventInvoker = _owner.UnitTaskEventInvoker;
         _resourcesScanner = _owner.ResourcesScanner;
+        _collectingResourceRegister = _owner.CollectingResourceRegister;
 
         _flagSetter.FlagStatusChanged += OnFlagStatusChanged;
         _unitTaskEventInvoker.UnitTaskStatusChanged += HandleUnitStatusChanged;
         _resourcesScanner.FoundResource += HandleAvailableResource;
-        _generalResourcesRegister = _owner.GeneralResourcesRegister;
+        _resourcesEventInvoker = owner.ResourcesEventInvoker;
         StartCoroutine(AppointExecutors());
     }
 
@@ -50,7 +52,7 @@ public class UnitTasker : MonoBehaviour
 
         if (_flagSetter.Flag != null)
         {
-            _colonizationTasks.Add(new ColonizeTask(_flagSetter.Flag.transform.position, _owner, _owner.BuildingEventInvoker));
+            _colonizationTasks.Add(new ColonizeTask(_flagSetter.Flag.transform, _owner, _owner.BuildingEventInvoker));
         }
     }
 
@@ -86,11 +88,11 @@ public class UnitTasker : MonoBehaviour
 
     private void HandleAvailableResource(Resource resource)
     {
-        if (_generalResourcesRegister.GetResourceCollectingStatus(gameObject.GetInstanceID(), resource.gameObject.GetInstanceID()) == false
-            && _generalResourcesRegister.GetResourceOnBaseStatus(resource.gameObject.GetInstanceID()) == false
-            && _generalResourcesRegister.GetResourceTakedStatus(resource.gameObject.GetInstanceID()) == false)
+        if (resource.transform.parent == null && 
+            _collectingResourceRegister.GetResourceCollectingStatus(resource.gameObject.GetInstanceID()) == false)
         {
             _collectTasks.Add(new CollectResourceTask(resource, _owner));
+            _resourcesEventInvoker.InvokeResourceChoosed(gameObject.GetInstanceID(), resource.gameObject.GetInstanceID());
         }
     }
 

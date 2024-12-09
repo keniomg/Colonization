@@ -40,6 +40,8 @@ public class ResourcesStorage : MonoBehaviour
     {
         resource.transform.position = GetPlacePosition();
         resource.transform.rotation = Quaternion.identity;
+        resource.transform.SetParent(transform);
+        _resourceEventInvoker.InvokeResourceUnchoosed(gameObject.GetInstanceID(), resource.gameObject.GetInstanceID());
 
         if (resource.TryGetComponent(out BoxCollider collider))
         {
@@ -70,12 +72,9 @@ public class ResourcesStorage : MonoBehaviour
         if (_resources.ContainsKey(id))
         {
             _resources.Remove(id);
+            resource.transform.SetParent(null);
             ValueChanged.Invoke();
-
-            if (resource != null)
-            {
-                _resourceEventInvoker.InvokeResourceReturn(resource);
-            }
+            _resourceEventInvoker.InvokeResourceReturned(resource);
         }
     }
 

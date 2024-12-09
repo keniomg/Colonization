@@ -1,8 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class UnitAnimationEventInvoker : ScriptableObject
+public class UnitAnimationEventInvoker : MonoBehaviour
 {
     public event Action<AnimationsTypes, bool> AnimationChanged;
 

@@ -15,10 +15,10 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public partial class @PlayerInput: IInputActionCollection2, IDisposable
+public partial class PlayerInputHandler: IInputActionCollection2, IDisposable
 {
     public InputActionAsset asset { get; }
-    public @PlayerInput()
+    public PlayerInputHandler()
     {
         asset = InputActionAsset.FromJson(@"{
     ""name"": ""PlayerInput"",
@@ -155,8 +155,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_FlagSetted;
     public struct PlayerActions
     {
-        private @PlayerInput m_Wrapper;
-        public PlayerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        private PlayerInputHandler m_Wrapper;
+        public PlayerActions(PlayerInputHandler wrapper) { m_Wrapper = wrapper; }
         public InputAction @Choosed => m_Wrapper.m_Player_Choosed;
         public InputAction @FlagSetted => m_Wrapper.m_Player_FlagSetted;
         public InputActionMap Get() { return m_Wrapper.m_Player; }

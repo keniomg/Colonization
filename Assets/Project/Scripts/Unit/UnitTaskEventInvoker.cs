@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class UnitTaskEventInvoker : ScriptableObject
+public class UnitTaskEventInvoker : MonoBehaviour
 {
     public event Action<Unit, UnitTaskStatusTypes> UnitTaskStatusChanged;
 

@@ -3,8 +3,7 @@
 public class ColonizeCommand : ICommand
 {
     private UnitColonizer _unitColonizer;
-    private Base _owner;
-    private Vector3 _colonizePoint;
+    private Transform _colonizeTransform;
     private bool _isComplete;
     private BuildingEventInvoker _buildingEventInvoker;
     private bool _isInterrupted;
@@ -12,17 +11,16 @@ public class ColonizeCommand : ICommand
     public bool IsComplete => _isComplete;
     public bool IsInterrupted => _isInterrupted;
 
-    public ColonizeCommand(Unit unit, Base owner, Vector3 colonizePoint, BuildingEventInvoker buildingEventInvoker)
+    public ColonizeCommand(Unit unit, Transform colonizeTransform, BuildingEventInvoker buildingEventInvoker)
     {
         _buildingEventInvoker = buildingEventInvoker;
         _unitColonizer = unit.Colonizer;
-        _owner = owner;
-        _colonizePoint = colonizePoint;
+        _colonizeTransform = colonizeTransform;
     }
 
     public void Execute()
     {
-        if (_unitColonizer.Colonize(_colonizePoint, _owner, _buildingEventInvoker))
+        if (_unitColonizer.Colonize(_colonizeTransform.position, _buildingEventInvoker))
         {
             _isComplete = true;
         }

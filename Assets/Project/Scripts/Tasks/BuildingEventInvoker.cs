@@ -1,8 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class BuildingEventInvoker : ScriptableObject
+public class BuildingEventInvoker : MonoBehaviour
 {
     public event Action BuildingPlanned;
     public event Action BuildingStarted;

@@ -637,6 +637,7 @@ GameObject:
   - component: {fileID: 2996640131654794182}
   - component: {fileID: 314849322344900458}
   - component: {fileID: 5987764964086009462}
+  - component: {fileID: 1921492242031201995}
   m_Layer: 3
   m_Name: Unit
   m_TagString: Untagged
@@ -737,7 +738,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 10
-  _offsetToPoint: 5
 --- !u!136 &6971725490709122762
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -784,11 +784,11 @@ NavMeshAgent:
   m_GameObject: {fileID: 2311058311780747498}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 1
   m_Speed: 1
-  m_Acceleration: 8
+  m_Acceleration: 50
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 360
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -821,6 +821,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41af3590d59de1540a7ffa79399d9ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _basePrefab: {fileID: 8984826528171323642, guid: 6cf7f5c6a23e79846961df35bca1dd30,
+    type: 3}
 --- !u!114 &314849322344900458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -843,6 +845,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f01c0506897ca864aaf71a2d8275ecd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1921492242031201995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2311058311780747498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c4e2ae82746ab24da1b87c70dc3248f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2328267431381646369

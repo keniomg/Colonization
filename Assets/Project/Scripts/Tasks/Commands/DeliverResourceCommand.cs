@@ -4,7 +4,6 @@
     private Resource _resource;
     private ResourcesStorage _storage;
     private UnitAnimationEventInvoker _unitAnimationEventInvoker;
-    private ResourcesEventInvoker _resourceEventInvoker;
 
     private bool _isComplete;
     private bool _isInterrupted;
@@ -19,7 +18,6 @@
             _resourcesHolder = unitResourcesHolder;
             _unitAnimationEventInvoker = unit.AnimationEventInvoker;
             _storage = owner.Storage;
-            _resourceEventInvoker = owner.ResourcesEventInvoker;
             _resource = resource;
         }
     }
@@ -29,7 +27,6 @@
         if (_resourcesHolder.GiveResource(_resource, _storage))
         {
             _isComplete = true;
-            _resourceEventInvoker.InvokeResourceTaked(_resource);
         }
         else
         {

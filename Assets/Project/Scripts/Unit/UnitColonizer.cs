@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class UnitColonizer : MonoBehaviour
 {
+    [SerializeField] private Base _basePrefab;
+
     public event Action Colonized;
 
-    public bool Colonize(Vector3 position, Base owner, BuildingEventInvoker buildingEventInvoker)
+    public bool Colonize(Vector3 position, BuildingEventInvoker buildingEventInvoker)
     {
-        Base newOwner = Instantiate(owner, position, Quaternion.identity);
+        Base newOwner = Instantiate(_basePrefab, position, Quaternion.identity);
         buildingEventInvoker.InvokeBuildingStarted();
 
         if (TryGetComponent(out Unit unit))

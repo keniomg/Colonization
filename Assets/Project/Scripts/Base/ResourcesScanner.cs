@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Collections;
 
@@ -10,17 +9,12 @@ public class ResourcesScanner : MonoBehaviour
     [SerializeField] private float _delay;
 
     private WaitForSeconds _scanRepeatDelay;
-    private ResourcesEventInvoker _resourcesEventInvoker;
-    private Dictionary<int, Resource> _availableResources = new();
-    private Dictionary<int, Resource> _collectingResources = new();
 
     public event Action<Resource> FoundResource;
 
-    public void Initialize(ResourcesEventInvoker resourcesEventInvoker)
+    public void Initialize()
     {
         _scanRepeatDelay = new(_delay);
-        _resourcesEventInvoker = resourcesEventInvoker;
-
         StartCoroutine(Scanning());
     }
 
