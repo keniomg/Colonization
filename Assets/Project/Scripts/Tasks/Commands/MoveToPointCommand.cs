@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-public class MoveToTargetCommand : ICommand
+public class MoveToPointCommand : ICommand
 {
     private UnitMover _unitMover;
-    private Transform _targetTransform;
+    private Vector3 _pointPosition;
     private float _offset;
     private UnitAnimationEventInvoker _unitAnimationEventInvoker;
     private bool _isComplete;
@@ -12,11 +12,11 @@ public class MoveToTargetCommand : ICommand
     public bool IsComplete => _isComplete;
     public bool IsInterrupted => _isInterrupted;
 
-    public MoveToTargetCommand(Unit unit, Transform targetTransform, float offset = 0)
+    public MoveToPointCommand(Unit unit, Vector3 position, float offset = 0)
     {
         _unitMover = unit.Mover;
         _unitAnimationEventInvoker = unit.AnimationEventInvoker;
-        _targetTransform = targetTransform;
+        _pointPosition = position;
         _offset = offset;
     }
 
@@ -24,7 +24,7 @@ public class MoveToTargetCommand : ICommand
     {
         _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, true);
 
-        if (_unitMover.MoveToTarget(_targetTransform, _offset))
+        if (_unitMover.MoveToPoint(_pointPosition, _offset))
         {
             _isComplete = true;
             _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, false);

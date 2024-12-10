@@ -52,7 +52,7 @@ public class UnitTasker : MonoBehaviour
 
         if (_flagSetter.Flag != null)
         {
-            _colonizationTasks.Add(new ColonizeTask(_flagSetter.Flag.transform, _owner, _owner.BuildingEventInvoker));
+            _colonizationTasks.Add(new ColonizeTask(_flagSetter.Flag.transform.position, _owner, _owner.BuildingEventInvoker));
         }
     }
 
