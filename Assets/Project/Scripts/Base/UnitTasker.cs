@@ -26,7 +26,7 @@ public class UnitTasker : MonoBehaviour
         _flagSetter.FlagStatusChanged -= OnFlagStatusChanged;
     }
 
-    public virtual void Initialize(Base owner)
+    public void Initialize(Base owner)
     {
         _minimumUnitsCountForColonization = 1;
         _colonizationTaskCost = 5;
@@ -72,11 +72,11 @@ public class UnitTasker : MonoBehaviour
     private void GiveTask(List<Task> tasks)
     {
         Task givingTask = tasks[Random.Range(0, tasks.Count)];
-        GetFreeUnit().UnitCommandController.AddTask(givingTask);
+        GetNearestFreeUnit().UnitCommandController.AddTask(givingTask);
         tasks.Remove(givingTask);
     }
 
-    private Unit GetFreeUnit()
+    private Unit GetNearestFreeUnit()
     {
         if (_freeUnits.Count > 0)
         {

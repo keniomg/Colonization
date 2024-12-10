@@ -4,6 +4,13 @@
     private ResourcesStorage _storage;
     private Base _owner;
 
+    public CollectResourceTask(Resource resource, Base owner)
+    {
+        _owner = owner;
+        _storage = owner.Storage;
+        _resource = resource;
+    }
+
     public override void InitializeExecutor(Unit unit)
     {
         base.InitializeExecutor(unit);
@@ -19,12 +26,5 @@
         {
             Unit = null;
         }
-    }
-
-    public CollectResourceTask(Resource resource, Base owner)
-    {
-        _owner = owner;
-        _storage = owner.Storage;
-        _resource = resource;
     }
 }

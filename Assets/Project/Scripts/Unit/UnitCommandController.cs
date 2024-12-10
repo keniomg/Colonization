@@ -5,6 +5,7 @@ using UnityEngine;
 public class UnitCommandController : MonoBehaviour
 {
     private UnitTaskEventInvoker _unitTaskEventInvoker;
+    private UnitAnimationEventInvoker _unitAnimationEventInvoker;
     private Unit _selfUnit;
     private Queue<ICommand> _commands = new();
     private ICommand _currentCommand;
@@ -14,9 +15,10 @@ public class UnitCommandController : MonoBehaviour
         _selfUnit = TryGetComponent(out Unit unit) ? unit : null;
     }
 
-    public void Initialize(UnitTaskEventInvoker unitTaskEventInvoker)
+    public void Initialize(UnitTaskEventInvoker unitTaskEventInvoker, UnitAnimationEventInvoker unitAnimationEventInvoker)
     {
         _unitTaskEventInvoker = unitTaskEventInvoker;
+        _unitAnimationEventInvoker = unitAnimationEventInvoker;
         StartCoroutine(HandleTask());
     }
 
@@ -27,6 +29,7 @@ public class UnitCommandController : MonoBehaviour
 
     public void AddTask(Task task)
     {
+        _unitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Busy);
         task.InitializeExecutor(_selfUnit);
 
         foreach (ICommand command in task.GetCommands())
@@ -34,7 +37,6 @@ public class UnitCommandController : MonoBehaviour
             AddCommand(command);
         }
 
-        _unitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Busy);
         StartCoroutine(HandleTask());
     }
 
@@ -42,10 +44,7 @@ public class UnitCommandController : MonoBehaviour
     {
         while (_commands.Count > 0)
         {
-            if (_currentCommand == null)
-            {
-                _currentCommand = _commands.Dequeue();
-            }
+            _currentCommand ??= _commands.Dequeue();
 
             if (_currentCommand != null)
             {
@@ -69,5 +68,6 @@ public class UnitCommandController : MonoBehaviour
         }
 
         _unitTaskEventInvoker.Invoke(_selfUnit, UnitTaskStatusTypes.Free);
+        _unitAnimationEventInvoker.Invoke(AnimationsTypes.Idle, true);
     }
 }

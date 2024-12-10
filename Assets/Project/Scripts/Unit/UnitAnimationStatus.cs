@@ -28,6 +28,15 @@ public class UnitAnimationStatus : MonoBehaviour
             case AnimationsTypes.Hold:
                 IsHolding = isOn;
                 break;
+            default:
+                ResetAnimationStatus();
+                break;
         }
+    }
+
+    private void ResetAnimationStatus()
+    {
+        IsWalking = false;
+        IsHolding = false;
     }
 }

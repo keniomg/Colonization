@@ -72,9 +72,9 @@ public class ResourcesStorage : MonoBehaviour
         if (_resources.ContainsKey(id))
         {
             _resources.Remove(id);
-            resource.transform.SetParent(null);
             ValueChanged.Invoke();
             _resourceEventInvoker.InvokeResourceReturned(resource);
+            resource.transform.SetParent(null);
         }
     }
 

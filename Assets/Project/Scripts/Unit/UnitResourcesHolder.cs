@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class UnitResourcesHolder : MonoBehaviour
 {
-    [SerializeField] private float _actionDistanceOffset;
     [SerializeField] private Transform _holdingPoint;
 
     private Resource _holdingResource;

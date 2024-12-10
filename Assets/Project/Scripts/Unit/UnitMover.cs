@@ -12,7 +12,7 @@ public class UnitMover : MonoBehaviour
     {
         _navMeshAgent = navMeshAgent;
         _navMeshAgent.speed = _speed;
-        _defaultOffsetDistance = transform.localScale.y;
+        _defaultOffsetDistance = 5;
     }
 
     public bool MoveToResource(Transform resourceTransform, ref bool isInterrupted)
@@ -20,6 +20,7 @@ public class UnitMover : MonoBehaviour
         if (resourceTransform.parent != null)
         {
             isInterrupted = true;
+            return false;
         }
 
         return MoveToTarget(resourceTransform);
@@ -29,18 +30,9 @@ public class UnitMover : MonoBehaviour
     {
         if (targetTransform != null)
         {
-            offset = offset == 0 ? _defaultOffsetDistance : (offset + _defaultOffsetDistance);
+            offset += _defaultOffsetDistance;
 
             return MoveToPoint(targetTransform.position, offset);
-            //_navMeshAgent.SetDestination(targetTransform.position);
-            //_navMeshAgent.stoppingDistance = _defaultOffsetDistance;
-
-            //if (transform.position.IsEnoughDistance(targetTransform.position, offset))
-            //{
-            //    _navMeshAgent.ResetPath();
-
-            //    return true;
-            //}
         }
 
         return false;

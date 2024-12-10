@@ -45,7 +45,7 @@ public class UnitSpawner : MonoBehaviour
         UnitsCount++;
         unit.gameObject.SetActive(true);
         unit.transform.position = GetSpawnPosition();
-        unit.UnitCommandController.Initialize(_owner.UnitTaskEventInvoker);
+        unit.UnitCommandController.Initialize(_owner.UnitTaskEventInvoker, unit.AnimationEventInvoker);
         unit.Colonizer.Colonized += OnColonized;
     }
 
@@ -104,7 +104,7 @@ public class UnitSpawner : MonoBehaviour
 
         _isSpawning = true;
 
-        if (_owner.FlagSetter.Flag == null)
+        if (_owner.FlagSetter.Flag == null || UnitsCount <= 1)
         {
             while (_owner.Storage.Count >= _unitCost)
             {

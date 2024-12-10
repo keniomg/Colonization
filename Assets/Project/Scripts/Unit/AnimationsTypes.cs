@@ -1,5 +1,6 @@
 ﻿public enum AnimationsTypes
 {
     Walk,
-    Hold
+    Hold,
+    Idle
 }

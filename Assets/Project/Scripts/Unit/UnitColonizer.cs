@@ -15,7 +15,7 @@ public class UnitColonizer : MonoBehaviour
         if (TryGetComponent(out Unit unit))
         {
             Colonized.Invoke();
-            unit.UnitCommandController.Initialize(newOwner.UnitTaskEventInvoker);
+            unit.UnitCommandController.Initialize(newOwner.UnitTaskEventInvoker, unit.AnimationEventInvoker);
 
             return true;
         }
