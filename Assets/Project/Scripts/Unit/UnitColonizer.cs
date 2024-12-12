@@ -7,7 +7,7 @@ public class UnitColonizer : MonoBehaviour
 
     public event Action Colonized;
 
-    public bool Colonize(Vector3 position, BuildingEventInvoker buildingEventInvoker)
+    public bool CanColonize(Vector3 position, BuildingEventInvoker buildingEventInvoker)
     {
         Base newOwner = Instantiate(_basePrefab, position, Quaternion.identity);
         buildingEventInvoker.InvokeBuildingStarted();

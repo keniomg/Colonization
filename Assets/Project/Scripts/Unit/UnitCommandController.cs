@@ -10,13 +10,9 @@ public class UnitCommandController : MonoBehaviour
     private Queue<ICommand> _commands = new();
     private ICommand _currentCommand;
 
-    private void Awake()
-    {
-        _selfUnit = TryGetComponent(out Unit unit) ? unit : null;
-    }
-
     public void Initialize(UnitTaskEventInvoker unitTaskEventInvoker, UnitAnimationEventInvoker unitAnimationEventInvoker)
     {
+        _selfUnit ??= TryGetComponent(out Unit unit) ? unit : null;
         _unitTaskEventInvoker = unitTaskEventInvoker;
         _unitAnimationEventInvoker = unitAnimationEventInvoker;
         StartCoroutine(HandleTask());

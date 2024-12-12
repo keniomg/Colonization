@@ -6,17 +6,17 @@ public class CollectingResourceRegister : MonoBehaviour
     private List<int> _collectingResources = new();
     private ResourcesEventInvoker _resourcesEventInvoker;
 
-    private void OnDestroy()
-    {
-        _resourcesEventInvoker.ResourceChoosed -= RegisterCollectingResource;
-        _resourcesEventInvoker.ResourceUnchoosed -= UnregisterCollectingResource;
-    }
-
     public void Initialize(ResourcesEventInvoker resourcesEventInvoker)
     {
         _resourcesEventInvoker = resourcesEventInvoker;
         _resourcesEventInvoker.ResourceChoosed += RegisterCollectingResource;
         _resourcesEventInvoker.ResourceUnchoosed += UnregisterCollectingResource;
+    }
+
+    private void OnDestroy()
+    {
+        _resourcesEventInvoker.ResourceChoosed -= RegisterCollectingResource;
+        _resourcesEventInvoker.ResourceUnchoosed -= UnregisterCollectingResource;
     }
 
     public bool GetResourceCollectingStatus(int resourceID)

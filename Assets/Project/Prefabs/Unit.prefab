@@ -723,7 +723,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c798f87f83c16fa4db4562bc5827cd2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionDistanceOffset: 5
   _holdingPoint: {fileID: 7710200838201425774}
 --- !u!114 &8962454611547263133
 MonoBehaviour:

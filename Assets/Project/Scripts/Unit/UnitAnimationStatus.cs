@@ -7,15 +7,15 @@ public class UnitAnimationStatus : MonoBehaviour
     public bool IsHolding {get; private set; }
     public bool IsWalking {get; private set; }
 
-    private void OnDestroy()
-    {
-        _unitAnimationEventInvoker.AnimationChanged -= OnAnimationChanged;
-    }
-
     public void Initialize(UnitAnimationEventInvoker unitAnimationEventInvoker)
     {
         _unitAnimationEventInvoker = unitAnimationEventInvoker;
         _unitAnimationEventInvoker.AnimationChanged += OnAnimationChanged;
+    }
+
+    private void OnDestroy()
+    {
+        _unitAnimationEventInvoker.AnimationChanged -= OnAnimationChanged;
     }
 
     private void OnAnimationChanged(AnimationsTypes animationsType, bool isOn)

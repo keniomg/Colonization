@@ -15,6 +15,11 @@ public class ResourcesStorage : MonoBehaviour
 
     public int Count => _resources.Count;
 
+    public void Initialize(ResourcesEventInvoker resourcesEventInvoker)
+    {
+        _resourceEventInvoker = resourcesEventInvoker;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.GetType() == typeof(BoxCollider) && other.TryGetComponent(out Resource resource))
@@ -31,15 +36,9 @@ public class ResourcesStorage : MonoBehaviour
         }
     }
 
-    public void Initialize(ResourcesEventInvoker resourcesEventInvoker)
-    {
-        _resourceEventInvoker = resourcesEventInvoker;
-    }
-
     public void PlaceResource(Resource resource)
     {
-        resource.transform.position = GetPlacePosition();
-        resource.transform.rotation = Quaternion.identity;
+        resource.transform.SetPositionAndRotation(GetPlacePosition(), Quaternion.identity);
         resource.transform.SetParent(transform);
         _resourceEventInvoker.InvokeResourceUnchoosed(gameObject.GetInstanceID(), resource.gameObject.GetInstanceID());
 

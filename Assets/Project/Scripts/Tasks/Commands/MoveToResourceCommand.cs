@@ -22,7 +22,7 @@ public class MoveToResourceCommand : ICommand
     {
         _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, true);
 
-        if (_unitMover.MoveToResource(_targetTransform, ref _isInterrupted))
+        if (_unitMover.CanMoveToResource(_targetTransform, ref _isInterrupted))
         {
             _isComplete = true;
             _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, false);

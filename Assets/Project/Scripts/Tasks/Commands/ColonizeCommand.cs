@@ -20,7 +20,7 @@ public class ColonizeCommand : ICommand
 
     public void Execute()
     {
-        if (_unitColonizer.Colonize(_colonizePosition, _buildingEventInvoker))
+        if (_unitColonizer.CanColonize(_colonizePosition, _buildingEventInvoker))
         {
             _isComplete = true;
         }

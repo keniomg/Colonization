@@ -20,32 +20,11 @@ public class FlagSetter : MonoBehaviour
 
     public Flag Flag { get; private set; }
 
-    private void Awake()
+    public void Initialize(Base owner, Choosable choosable)
     {
         _playerInputHandler = new();
         _mainCamera = Camera.main;
-    }
-
-    private void OnEnable()
-    {
         _playerInputHandler.Player.FlagSetted.performed += OnFlagSetted;
-    }
-
-    private void OnDisable()
-    {
-        _playerInputHandler.Player.FlagSetted.performed -= OnFlagSetted;
-    }
-
-    private void OnDestroy()
-    {
-        _choosable.Choosed -= OnChoosed;
-        _choosable.Unchoosed -= OnUnchoosed;
-        _flag.CollidedWithPreview -= UnsetFlag;
-        _buildingEventInvoker.BuildingPlanned -= UnsetFlag;
-    }
-
-    public void Initialize(Base owner, Choosable choosable)
-    {
         Flag = null;
         _flag = Instantiate(_flagPrefab);
         _flag.CollidedWithPreview += UnsetFlag;
@@ -57,6 +36,15 @@ public class FlagSetter : MonoBehaviour
         _choosable.Unchoosed += OnUnchoosed;
         _buildingEventInvoker = owner.BuildingEventInvoker;
         _buildingEventInvoker.BuildingPlanned += UnsetFlag;
+    }
+
+    private void OnDestroy()
+    {
+        _playerInputHandler.Player.FlagSetted.performed -= OnFlagSetted;
+        _choosable.Choosed -= OnChoosed;
+        _choosable.Unchoosed -= OnUnchoosed;
+        _flag.CollidedWithPreview -= UnsetFlag;
+        _buildingEventInvoker.BuildingPlanned -= UnsetFlag;
     }
 
     public void OnFlagSetted(InputAction.CallbackContext context)

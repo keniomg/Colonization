@@ -19,31 +19,29 @@ public class UnitTasker : MonoBehaviour
     private CollectingResourceRegister _collectingResourceRegister;
     private ResourcesEventInvoker _resourcesEventInvoker;
 
-    protected virtual void OnDestroy()
-    {
-        _unitTaskEventInvoker.UnitTaskStatusChanged -= HandleUnitStatusChanged;
-        _resourcesScanner.FoundResource -= HandleAvailableResource;
-        _flagSetter.FlagStatusChanged -= OnFlagStatusChanged;
-    }
-
     public void Initialize(Base owner)
     {
         _minimumUnitsCountForColonization = 1;
         _colonizationTaskCost = 5;
         _unitSearchingDelay = 1;
         _searchUnitDelay = new(_unitSearchingDelay);
-
         _owner = owner;
         _flagSetter = _owner.FlagSetter;
         _unitTaskEventInvoker = _owner.UnitTaskEventInvoker;
         _resourcesScanner = _owner.ResourcesScanner;
         _collectingResourceRegister = _owner.CollectingResourceRegister;
-
         _flagSetter.FlagStatusChanged += OnFlagStatusChanged;
         _unitTaskEventInvoker.UnitTaskStatusChanged += HandleUnitStatusChanged;
         _resourcesScanner.FoundResource += HandleAvailableResource;
         _resourcesEventInvoker = owner.ResourcesEventInvoker;
         StartCoroutine(AppointExecutors());
+    }
+
+    private void OnDestroy()
+    {
+        _unitTaskEventInvoker.UnitTaskStatusChanged -= HandleUnitStatusChanged;
+        _resourcesScanner.FoundResource -= HandleAvailableResource;
+        _flagSetter.FlagStatusChanged -= OnFlagStatusChanged;
     }
 
     private void OnFlagStatusChanged()
@@ -123,7 +121,7 @@ public class UnitTasker : MonoBehaviour
             else
             {
                 if (_flagSetter.Flag != null && _owner.Storage.Count >= _colonizationTaskCost 
-                    && _owner.UnitSpawner.UnitsCount > _minimumUnitsCountForColonization)
+                    && _owner.UnitPool.UnitsCount > _minimumUnitsCountForColonization)
                 {
                     if (_colonizationTasks.Count > 0)
                     {

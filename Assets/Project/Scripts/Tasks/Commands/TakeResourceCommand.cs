@@ -21,7 +21,7 @@
 
     public void Execute()
     {
-        if (_resourcesHolder.TakeResource(_resource))
+        if (_resourcesHolder.CanTakeResource(_resource))
         {
             _isComplete = true;
             _unitAnimationEventInvoker.Invoke(AnimationsTypes.Hold, true);

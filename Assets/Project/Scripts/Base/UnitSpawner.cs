@@ -1,96 +1,51 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class UnitSpawner : MonoBehaviour
 {
-    [SerializeField] private Unit _unitPrefab;
-    [SerializeField] private int _poolCapacity;
-    [SerializeField] private int _poolMaximumSize;
-    [SerializeField] private float _spawnOffsetRadius;
     [SerializeField] private int _startCount;
 
+    private UnitPool _unitPool;
     private int _unitCost;
-    private ObjectPool<Unit> _pool;
     private Base _owner;
     private bool _isSpawning;
     private WaitForSeconds _spawnDelay;
     private float _delay;
 
-    public int UnitsCount { get; private set; }
-
-    public void Initialize(Base owner)
+    public void Initialize(Base owner, UnitPool unitPool)
     {
-        _pool = new ObjectPool<Unit>(
-                createFunc: () => Instantiate(_unitPrefab),
-                actionOnGet: (unit) => AccompanyGet(unit),
-                actionOnRelease: (unit) => AccompanyRelease(unit),
-                actionOnDestroy: (unit) => Destroy(unit.gameObject),
-                collectionCheck: true,
-                defaultCapacity: _poolCapacity,
-                maxSize: _poolMaximumSize);
-
+        _unitPool = unitPool;
         _delay = 1;
-        _spawnDelay = new WaitForSeconds(_delay);
-        UnitsCount = 0;
+        _spawnDelay = new(_delay);
         _unitCost = 3;
         _owner = owner;
-        _owner.Storage.ValueChanged += SpawnRes;
-        _owner.FlagSetter.FlagStatusChanged += SpawnFlag;
+        _owner.Storage.ValueChanged += OnResourceValueChanged;
+        _owner.FlagSetter.FlagStatusChanged += OnFlagStatusChanged;
         SpawnStartCount();
     }
 
-    private void AccompanyGet(Unit unit)
+    private void OnDestroy()
     {
-        UnitsCount++;
-        unit.gameObject.SetActive(true);
-        unit.transform.position = GetSpawnPosition();
-        unit.UnitCommandController.Initialize(_owner.UnitTaskEventInvoker, unit.AnimationEventInvoker);
-        unit.Colonizer.Colonized += OnColonized;
-    }
-
-    private void AccompanyRelease(Unit unit)
-    {
-        UnitsCount--;
-        unit.gameObject.SetActive(false);
-    }
-
-    private void OnColonized()
-    {
-        UnitsCount--;
+        _owner.Storage.ValueChanged -= OnResourceValueChanged;
+        _owner.FlagSetter.FlagStatusChanged -= OnFlagStatusChanged;
     }
 
     private void SpawnStartCount()
     {
         for (int i = 0; i < _startCount; i++)
         {
-            _pool.Get();
+            _unitPool.GetUint();
         }
 
         _startCount = 0;
     }
 
-    private Vector3 GetSpawnPosition()
-    {
-        float minimumSpawnDistance = _owner.Building.OccupiedZoneRadius;
-        float maximumSpawnDistance = minimumSpawnDistance + _spawnOffsetRadius;
-        float spawnDistance = Random.Range(minimumSpawnDistance, maximumSpawnDistance);
-
-        float minimumSpawnAngle = 0;
-        float maximumSpawnAngle = Mathf.PI * 2;
-        float spawnAngle = Random.Range(minimumSpawnAngle, maximumSpawnAngle);
-
-        Vector3 spawnPosition = _owner.transform.position + new Vector3(Mathf.Cos(spawnAngle), 0, Mathf.Sin(spawnAngle)) * spawnDistance;
-
-        return spawnPosition;
-    }
-
-    private void SpawnFlag()
+    private void OnFlagStatusChanged()
     {
         StartCoroutine(SpawnUnits());
     }
 
-    private void SpawnRes()
+    private void OnResourceValueChanged()
     {
         StartCoroutine(SpawnUnits());
     }
@@ -104,12 +59,12 @@ public class UnitSpawner : MonoBehaviour
 
         _isSpawning = true;
 
-        if (_owner.FlagSetter.Flag == null || UnitsCount <= 1)
+        if (_owner.FlagSetter.Flag == null || _unitPool.UnitsCount <= 1)
         {
             while (_owner.Storage.Count >= _unitCost)
             {
                 _owner.Storage.PayResource(_unitCost);
-                _pool.Get();
+                _unitPool.GetUint();
 
                 yield return _spawnDelay;
             }

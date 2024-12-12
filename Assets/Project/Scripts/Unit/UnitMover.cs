@@ -15,7 +15,7 @@ public class UnitMover : MonoBehaviour
         _defaultOffsetDistance = 5;
     }
 
-    public bool MoveToResource(Transform resourceTransform, ref bool isInterrupted)
+    public bool CanMoveToResource(Transform resourceTransform, ref bool isInterrupted)
     {
         if (resourceTransform.parent != null)
         {
@@ -23,22 +23,22 @@ public class UnitMover : MonoBehaviour
             return false;
         }
 
-        return MoveToTarget(resourceTransform);
+        return CanMoveToTarget(resourceTransform);
     }
 
-    public bool MoveToTarget(Transform targetTransform, float offset = 0)
+    public bool CanMoveToTarget(Transform targetTransform, float offset = 0)
     {
         if (targetTransform != null)
         {
             offset += _defaultOffsetDistance;
 
-            return MoveToPoint(targetTransform.position, offset);
+            return CanMoveToPoint(targetTransform.position, offset);
         }
 
         return false;
     }
 
-    public bool MoveToPoint(Vector3 position, float offset)
+    public bool CanMoveToPoint(Vector3 position, float offset)
     {
         _navMeshAgent.SetDestination(position);
         _navMeshAgent.stoppingDistance = _defaultOffsetDistance;

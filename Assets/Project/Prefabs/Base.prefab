@@ -5165,6 +5165,7 @@ GameObject:
   - component: {fileID: 7064863862554092321}
   - component: {fileID: 603960026537764192}
   - component: {fileID: 1106434931514103015}
+  - component: {fileID: 1123409451925656547}
   m_Layer: 6
   m_Name: Base
   m_TagString: Untagged
@@ -5284,7 +5285,6 @@ MonoBehaviour:
   _wallsLayer:
     serializedVersion: 2
     m_Bits: 128
-  _inputEventInvoker: {fileID: 11400000, guid: ba448d4d10729a84e9cfb3e365bef6b0, type: 2}
 --- !u!114 &9199127287971542409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5367,7 +5367,6 @@ MonoBehaviour:
   _poolCapacity: 5
   _poolMaximumSize: 8
   _spawnOffsetRadius: 2
-  _startCount: 0
 --- !u!114 &7064863862554092321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5404,6 +5403,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fec4ebd6dfee8b24da3f1656846f2443, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1123409451925656547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4030470991490825334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b35ef855457368249a6b0e430a8517d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _startCount: 0
 --- !u!1 &4066471234402251177
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,7 +24,7 @@
 
     public void Execute()
     {
-        if (_resourcesHolder.GiveResource(_resource, _storage))
+        if (_resourcesHolder.CanGiveResource(_resource, _storage))
         {
             _isComplete = true;
         }

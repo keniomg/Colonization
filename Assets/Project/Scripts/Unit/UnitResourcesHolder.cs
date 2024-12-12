@@ -9,7 +9,7 @@ public class UnitResourcesHolder : MonoBehaviour
 
     public event Action<bool> HoldingStatusChanged;
 
-    public bool TakeResource(Resource resource)
+    public bool CanTakeResource(Resource resource)
     {
         if (resource != null)
         {
@@ -26,7 +26,7 @@ public class UnitResourcesHolder : MonoBehaviour
         return false;
     }
 
-    public bool GiveResource(Resource resource, ResourcesStorage storage)
+    public bool CanGiveResource(Resource resource, ResourcesStorage storage)
     {
         if (_holdingResource != null)
         {

@@ -8,15 +8,15 @@ public class UnitAnimator : MonoBehaviour
     private Animator _animator;
     private UnitAnimationStatus _unitAnimationStatus;
 
-    private void Update()
-    {
-        HandleAnimations();
-    }
-
     public void Initialize(UnitAnimationStatus unitAnimationStatus, Animator animator)
     {
         _unitAnimationStatus = unitAnimationStatus;
         _animator = animator;
+    }
+
+    private void Update()
+    {
+        HandleAnimations();
     }
 
     private void HandleAnimations()

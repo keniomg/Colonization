@@ -24,7 +24,7 @@ public class MoveToPointCommand : ICommand
     {
         _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, true);
 
-        if (_unitMover.MoveToPoint(_pointPosition, _offset))
+        if (_unitMover.CanMoveToPoint(_pointPosition, _offset))
         {
             _isComplete = true;
             _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, false);

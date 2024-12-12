@@ -13,10 +13,12 @@ public class ResourcesSpawner : MonoBehaviour
 
     private WaitForSeconds _spawnDelay;
     private ObjectPool<Resource> _pool;
+    private bool _isSpawnEnabled;
 
     private void Awake()
     {
         _spawnDelay = new(_resourcesSpawnDelay);
+        _isSpawnEnabled = true;
 
         _pool = new ObjectPool<Resource>(
               createFunc: () => Instantiate(_resourcePrefab),
@@ -57,7 +59,7 @@ public class ResourcesSpawner : MonoBehaviour
 
     private IEnumerator SpawnResources()
     {
-        while (true)
+        while (_isSpawnEnabled)
         {
             yield return _spawnDelay;
 

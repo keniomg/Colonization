@@ -24,7 +24,7 @@ public class MoveToTargetCommand : ICommand
     {
         _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, true);
 
-        if (_unitMover.MoveToTarget(_targetTransform, _offset))
+        if (_unitMover.CanMoveToTarget(_targetTransform, _offset))
         {
             _isComplete = true;
             _unitAnimationEventInvoker.Invoke(AnimationsTypes.Walk, false);

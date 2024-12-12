@@ -8,16 +8,16 @@ public class ResourcesCounterView : MonoBehaviour
 
     private ResourcesStorage _resourcesStorage;
 
-    private void OnDestroy()
-    {
-        _resourcesStorage.ValueChanged -= OnValueChanged;
-    }
-
     public void Initialize(ResourcesStorage resourcesStorage)
     {
         _resourcesStorage = resourcesStorage;
         _resourcesStorage.ValueChanged += OnValueChanged;
         OnValueChanged();
+    }
+
+    private void OnDestroy()
+    {
+        _resourcesStorage.ValueChanged -= OnValueChanged;
     }
 
     private void OnValueChanged()

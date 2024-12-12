@@ -9,18 +9,20 @@ public class ResourcesScanner : MonoBehaviour
     [SerializeField] private float _delay;
 
     private WaitForSeconds _scanRepeatDelay;
+    private bool _isScanEnable;
 
     public event Action<Resource> FoundResource;
 
     public void Initialize()
     {
         _scanRepeatDelay = new(_delay);
+        _isScanEnable = true;
         StartCoroutine(Scanning());
     }
 
     private IEnumerator Scanning()
     {
-        while (true)
+        while (_isScanEnable)
         {
             SearchResources();
 

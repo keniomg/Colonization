@@ -5,7 +5,7 @@ public class Building : MonoBehaviour
 {
     public float OccupiedZoneRadius { get; private set; }
 
-    private void Awake()
+    public void Initialize()
     {
         GetOccupiedZoneRadius();
     }

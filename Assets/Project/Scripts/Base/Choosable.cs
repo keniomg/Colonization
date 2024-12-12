@@ -8,7 +8,7 @@ public class Choosable : MonoBehaviour
     public event Action Choosed;
     public event Action Unchoosed;
 
-    private void Awake()
+    public void Initialize()
     {
         _highlight.Stop();
     }
